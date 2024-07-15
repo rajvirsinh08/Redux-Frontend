@@ -334,7 +334,7 @@ function SignUp() {
     const [image, setImage] = useState(null);
     const [imageError, setImageError] = useState('');
     const navigate = useNavigate();
-    const baseUrl = process.env.REACT_APP_BASE_URL; 
+    const baseUrl = process.env.REACT_APP_BASE_URL;
 
     const onChangeName = (e) => {
         setName(e.target.value);
