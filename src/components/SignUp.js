@@ -363,6 +363,7 @@ function SignUp() {
     const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
+        debugger
         e.preventDefault();
         let isError = false;
 
