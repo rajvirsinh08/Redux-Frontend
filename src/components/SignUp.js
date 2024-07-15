@@ -340,7 +340,7 @@ function SignUp() {
         setName(e.target.value);
         setNameError("");
         if (!/^[a-zA-Z]+$/.test(e.target.value)) {
-            setNameError("Please Enter Valid Name");
+            setNameError("Please Enter ValidName");
         }
     };
 
