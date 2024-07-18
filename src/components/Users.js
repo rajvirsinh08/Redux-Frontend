@@ -120,13 +120,13 @@ const Users = () => {
                             className="card"
                             style={{ width: "18rem", marginRight: "20px", marginTop: "15px" }}
                         >
-                            {/* <img
+                            <img
                                 className="card-img-top"
                                 src={eLe.image}
                                 alt="Card image cap"
                                 width="120px"
                                 height="150px"
-                            /> */}
+                            />
                             <div className="card-body">
                                 <h5 className="card-title">{eLe.name}</h5>
                                 <h5 className="card-title">{eLe.email}</h5>

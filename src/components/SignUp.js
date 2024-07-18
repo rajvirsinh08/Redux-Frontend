@@ -70,32 +70,31 @@ function SignUp() {
             setPasswordError("Password must be 6 characters");
             isError = true;
         }
-        // if (!image) {
-        //     setImageError("Please Select Image");
-        //     isError = true;
-        // }
+        if (!image) {
+            setImageError("Please Select Image");
+            isError = true;
+        }
 
         if (!isError) {
             const formData = new FormData();
             formData.append("name", name);
             formData.append("email", email);
             formData.append("password", password);
-            // formData.append("image", image);
+            formData.append("image", image);
 
             try {
-                
-                debugger
                 const response = await axiosInstance.post(`${baseUrl}/`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
+
                 if (response.status === 201) {
                     const result = response.data;
                     setName("");
                     setEmail("");
                     setPassword("");
-                    // setImage(null);
+                    setImage(null);
                     const user = { name, email };
                     dispatch(login({ user }));
                     toast.success("Sign up successful");
@@ -172,7 +171,7 @@ function SignUp() {
                                     helperText={passwordError}
                                 />
                             </Grid>
-                            {/* <Grid item xs={12}>
+                            <Grid item xs={12}>
                                 <input
                                     className="form-control"
                                     type="file"
@@ -186,7 +185,7 @@ function SignUp() {
                                         {imageError}
                                     </Typography>
                                 )}
-                            </Grid> */}
+                            </Grid>
                             <Grid item xs={12}>
                                 <Button
                                     type="submit"
