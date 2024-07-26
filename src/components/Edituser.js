@@ -15,8 +15,8 @@ const EditUser = () => {
     const [nameError, setNameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [error, setError] = useState("");
-    const [image, setImage] = useState(null);
-    const [imageError, setImageError] = useState("");
+    // const [image, setImage] = useState(null);
+    // const [imageError, setImageError] = useState("");
     const user = useSelector(selectUser);
     const navigate = useNavigate();
     const { id } = useParams();
@@ -32,10 +32,10 @@ const EditUser = () => {
         setEmailError("");
     };
 
-    const onChangeImage = (e) => {
-        setImage(e.target.files[0]);
-        setImageError("");
-    };
+    // const onChangeImage = (e) => {
+    //     setImage(e.target.files[0]);
+    //     setImageError("");
+    // };
     // const getSingleUser = async () => {
     //     try {
     //         const response = await axios.get(`http://localhost:5001/${id}`, {
@@ -70,7 +70,7 @@ const EditUser = () => {
                 const result = response.data;
                 setName(result.name);
                 setEmail(result.email);
-                setImage(result.image);
+                // setImage(result.image);
             } else {
                 setError("Failed to fetch user data");
             }
@@ -124,20 +124,20 @@ const EditUser = () => {
             setNameError("Please Enter Valid Name");
             isError = true;
         }
-        if (!image) {
-            setImageError("Please Select Image");
-            isError = true;
-        }
+        // if (!image) {
+        //     setImageError("Please Select Image");
+        //     isError = true;
+        // }
         if (!isError) {
             const formData = new FormData();
             formData.append("name", name);
             formData.append("email", email);
-            formData.append("image", image);
+            // formData.append("image", image);
 
             try {
                 // const response = await axiosInstance.patch(`${baseUrl}/${id}`, formData);
 
-                const response = await axiosInstance.patch(`${baseUrl}/${id}`, formData, {
+                const response = await axiosInstance.patch(`${baseUrl}/update/${id}`, formData, {
                     headers: {
                         'Authorization': `Bearer ${user.accessToken}`
                     },
@@ -250,7 +250,7 @@ const EditUser = () => {
                         {emailError}
                     </span>
                 </div>
-                <div className="mb-3">
+                {/* <div className="mb-3">
                     <input
                         className="form-control"
                         type="file"
@@ -269,7 +269,7 @@ const EditUser = () => {
                     >
                         {imageError}
                     </span>
-                </div>
+                </div> */}
                 <Button
                     type="submit"
                     color="primary"
