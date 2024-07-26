@@ -131,7 +131,7 @@ function SignIn() {
                 const response = await axiosInstance.post(`${baseUrl}/signin`, addUser, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${user.accessToken}`
+                        // 'Authorization': `Bearer ${user.accessToken}`
                     }
                 });
 

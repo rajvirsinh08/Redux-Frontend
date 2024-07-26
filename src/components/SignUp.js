@@ -83,7 +83,7 @@ function SignUp() {
             formData.append("image", image);
 
             try {
-                const response = await axiosInstance.post(`${baseUrl}/`, formData, {
+                const response = await axiosInstance.post(`${baseUrl}/api/users/nm`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
