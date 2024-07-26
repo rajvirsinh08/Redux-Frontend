@@ -21,7 +21,7 @@ function SignIn() {
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
     const [error, setError] = useState("");
-    const baseUrl = process.env.REACT_APP_BASE_URL;
+    // const baseUrl = process.env.REACT_APP_BASE_URL;
     // const user = useSelector(selectUser);
 
     // useEffect(() => {
@@ -128,7 +128,7 @@ function SignIn() {
             const addUser = { email, password };
 
             try {
-                const response = await axiosInstance.post(`${baseUrl}/signin`, addUser, {
+                const response = await axiosInstance.post(`/signin`, addUser, {
                     headers: {
                         'Content-Type': 'application/json',
                         // 'Authorization': `Bearer ${user.accessToken}`

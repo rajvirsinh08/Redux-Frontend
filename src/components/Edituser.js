@@ -20,7 +20,7 @@ const EditUser = () => {
     const user = useSelector(selectUser);
     const navigate = useNavigate();
     const { id } = useParams();
-    const baseUrl = process.env.REACT_APP_BASE_URL;
+    // const baseUrl = process.env.REACT_APP_BASE_URL;
 
     const onChangeName = (e) => {
         setName(e.target.value);
@@ -61,7 +61,7 @@ const EditUser = () => {
         debugger
         try {
             // const response = await axiosInstance.get(`${baseUrl}/${id}`);
-            const response = await axiosInstance.get(`${baseUrl}/${id}`, {
+            const response = await axiosInstance.get(`/${id}`, {
                 headers: {
                     'Authorization': `Bearer ${user.accessToken}`
                 },
@@ -137,7 +137,7 @@ const EditUser = () => {
             try {
                 // const response = await axiosInstance.patch(`${baseUrl}/${id}`, formData);
 
-                const response = await axiosInstance.patch(`${baseUrl}/update/${id}`, formData, {
+                const response = await axiosInstance.patch(`/update/${id}`, formData, {
                     headers: {
                         'Authorization': `Bearer ${user.accessToken}`
                     },

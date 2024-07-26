@@ -16,7 +16,7 @@ const Users = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const user = useSelector(selectUser);
-    const baseUrl = process.env.REACT_APP_BASE_URL;
+    // const baseUrl = process.env.REACT_APP_BASE_URL;
 
     const handleCreateUser = (e) => {
         e.preventDefault();
@@ -45,7 +45,7 @@ const Users = () => {
     }, []);
     async function getData() {
         try {
-            const response = await axiosInstance.get(`${baseUrl}/get`, {
+            const response = await axiosInstance.get(`/get`, {
                 headers: {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${user.accessToken}`
@@ -79,7 +79,7 @@ const Users = () => {
     // }
     const handleDelete = async (id) => {
         try {
-            await axiosInstance.delete(`${baseUrl}/delete/${id}`, {
+            await axiosInstance.delete(`/delete/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${user.accessToken}`
