@@ -110,7 +110,7 @@
 //                 </h1>
 //                 <button type="button" style={{ fontSize: 20 }} className="col-md-2 btn btn-outline-info" onClick={handleCreateUser}>Logout</button>
 //             </div>
-
+            
 //             <div className="row">
 //                 {data
 //                     ?.slice()
@@ -172,7 +172,44 @@ const Users = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
-
+    const handleDeleteAlert=(id)=>{
+    
+        confirmAlert({
+            title: 'Confirm to Delete',
+            message: 'Are you sure want to delete this data?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: async() => {
+                        try {
+                            // setLoading(true); // Start loading
+                            await axiosInstance.delete(`/delete/${id}`, {
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    'Authorization': `Bearer ${user.accessToken}`
+                                },
+                            });
+                            // setLoading(false); // Stop loading
+                            setError("Deleted successfully");
+                            setTimeout(() => {
+                                setError("");
+                                getData();
+                            }, 1000);
+                        } catch (error) {
+                            setLoading(false); // Stop loading in case of error
+                            setError(error.message);
+                            console.log(error);
+                        }
+                }},
+                {
+                    label: 'No',
+                    onClick: () => {
+                        getData();
+                    }
+                }
+            ]
+        });
+    }
     const handleCreateUser = (e) => {
         e.preventDefault();
         confirmAlert({
@@ -220,44 +257,19 @@ const Users = () => {
 
     const handleDelete = async (id) => {
         try {
-            debugger
-            // setLoading(true); // Start loading
+            setLoading(true); // Start loading
             await axiosInstance.delete(`/delete/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${user.accessToken}`
                 },
             });
-            // setLoading(false); // Stop loading
-            confirmAlert({
-                title: 'Confirm to Delete',
-                message: 'Are you sure want to delete this data?',
-                buttons: [
-                    {
-                        label: 'Yes',
-                        onClick: () => {
-                            // dispatch(logout());
-                            // navigate('/users');
-                            setTimeout(() => {
-                                setError("");
-                                getData();
-                            }, 1000);
-                            setError("Deleted successfully");
-                        }
-                    },
-                    {
-                        label: 'No',
-                        onClick: () => {
-                            getData();
-                        }
-                    }
-                ]
-            });
-            // setError("Deleted successfully");
-            // setTimeout(() => {
-            //     setError("");
-            //     getData();
-            // }, 1000);
+            setLoading(false); // Stop loading
+            setError("Deleted successfully");
+            setTimeout(() => {
+                setError("");
+                getData();
+            }, 1000);
         } catch (error) {
             setLoading(false); // Stop loading in case of error
             setError(error.message);
@@ -317,7 +329,7 @@ const Users = () => {
                                     </Link>
                                     <a
                                         className="btn btn-outline-danger"
-                                        onClick={() => handleDelete(eLe._id)}
+                                        onClick={() => handleDeleteAlert(eLe._id)}
                                     >
                                         Delete
                                     </a>
@@ -329,6 +341,7 @@ const Users = () => {
             <ToastContainer />
         </div>
     );
-};
+};      
 
 export default Users;
+    
