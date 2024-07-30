@@ -110,7 +110,7 @@
 //                 </h1>
 //                 <button type="button" style={{ fontSize: 20 }} className="col-md-2 btn btn-outline-info" onClick={handleCreateUser}>Logout</button>
 //             </div>
-            
+
 //             <div className="row">
 //                 {data
 //                     ?.slice()
@@ -177,7 +177,7 @@ const Users = () => {
         e.preventDefault();
         confirmAlert({
             title: 'Confirm to logout',
-            message: 'Are you sure?',
+            message: 'Are you sure want to logout?',
             buttons: [
                 {
                     label: 'Yes',
@@ -220,19 +220,44 @@ const Users = () => {
 
     const handleDelete = async (id) => {
         try {
-            setLoading(true); // Start loading
+            debugger
+            // setLoading(true); // Start loading
             await axiosInstance.delete(`/delete/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${user.accessToken}`
                 },
             });
-            setLoading(false); // Stop loading
-            setError("Deleted successfully");
-            setTimeout(() => {
-                setError("");
-                getData();
-            }, 1000);
+            // setLoading(false); // Stop loading
+            confirmAlert({
+                title: 'Confirm to Delete',
+                message: 'Are you sure want to delete this data?',
+                buttons: [
+                    {
+                        label: 'Yes',
+                        onClick: () => {
+                            // dispatch(logout());
+                            // navigate('/users');
+                            setTimeout(() => {
+                                setError("");
+                                getData();
+                            }, 1000);
+                            setError("Deleted successfully");
+                        }
+                    },
+                    {
+                        label: 'No',
+                        onClick: () => {
+                            getData();
+                        }
+                    }
+                ]
+            });
+            // setError("Deleted successfully");
+            // setTimeout(() => {
+            //     setError("");
+            //     getData();
+            // }, 1000);
         } catch (error) {
             setLoading(false); // Stop loading in case of error
             setError(error.message);
@@ -307,4 +332,3 @@ const Users = () => {
 };
 
 export default Users;
-    
