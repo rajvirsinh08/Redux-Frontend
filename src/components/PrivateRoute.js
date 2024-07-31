@@ -6,6 +6,7 @@ import { selectUser } from '../features/userSlice';
 
 const PrivateRoute = ({ children }) => {
   const user = useSelector(selectUser);
+  // return user ? children : <Navigate to="/login" />;
   const accessToken = user ? user.accessToken : null;
 
   if (!accessToken) {

@@ -17,7 +17,6 @@ function Logout1() {
     }
     return (
         <div className='logout'>
-
             <h1>Welcome  <span className='user_name'>{user.name}</span><br />
                 <span className='user_name'>{user.email}</span><br />
                 <Button className='logout_button' type="submit"

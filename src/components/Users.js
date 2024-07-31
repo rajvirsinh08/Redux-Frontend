@@ -321,7 +321,7 @@ const Users = () => {
                                     <h5 className="card-title">{eLe.name}</h5>
                                     <h5 className="card-title">{eLe.email}</h5>
                                     <Link
-                                        to={`/${eLe._id}`}
+                                        to={`/edituser/${eLe._id}`}
                                         style={{ marginRight: "10px" }}
                                         className="btn btn-outline-secondary"
                                     >

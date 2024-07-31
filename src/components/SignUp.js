@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
 import { Avatar, Button, TextField, Grid, Typography } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { login } from '../features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, selectUser } from '../features/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import axiosInstance from './axiosInstance';
@@ -19,6 +19,13 @@ function SignUp() {
     const navigate = useNavigate();
     // const baseUrl = process.env.REACT_APP_BASE_URL;
 
+    const user = useSelector(selectUser);
+    const accessToken = user ? user.accessToken : null;
+    useEffect(() => {
+        if (accessToken) {
+            navigate("/users")
+        }
+    }, [])
     const onChangeName = (e) => {
         setName(e.target.value);
         setNameError("");
