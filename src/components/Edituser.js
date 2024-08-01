@@ -3,11 +3,11 @@
 // import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 // import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
-// import { Avatar, TextField, Button, selectClasses } from "@mui/material";
+// import { Avatar, TextField, Button, Grid, Alert } from "@mui/material";
 // import { selectUser } from "../features/userSlice";
 // import { useSelector } from "react-redux";
-// import axios from "axios";
 // import axiosInstance from "./axiosInstance";
+
 // const EditUser = () => {
 //     const avatarStyle = { backgroundColor: "grey", margin: "20px" };
 //     const [name, setName] = useState("");
@@ -15,12 +15,9 @@
 //     const [nameError, setNameError] = useState("");
 //     const [emailError, setEmailError] = useState("");
 //     const [error, setError] = useState("");
-//     // const [image, setImage] = useState(null);
-//     // const [imageError, setImageError] = useState("");
 //     const user = useSelector(selectUser);
 //     const navigate = useNavigate();
 //     const { id } = useParams();
-//     // const baseUrl = process.env.REACT_APP_BASE_URL;
 
 //     const onChangeName = (e) => {
 //         setName(e.target.value);
@@ -32,36 +29,9 @@
 //         setEmailError("");
 //     };
 
-//     // const onChangeImage = (e) => {
-//     //     setImage(e.target.files[0]);
-//     //     setImageError("");
-//     // };
-//     // const getSingleUser = async () => {
-//     //     try {
-//     //         const response = await axios.get(`http://localhost:5001/${id}`, {
-//     //             headers: {
-//     //                 Authorization: `Bearer ${user.accessToken}`
-//     //             }
-//     //         });
-
-//     //         if (response.status === 200) {
-//     //             const result = response.data;
-//     //             setName(result.name);
-//     //             setEmail(result.email);
-//     //             setImage(result.image);
-//     //         } else {
-//     //             setError("Failed to fetch user data");
-//     //         }
-//     //     } catch (err) {
-//     //         console.error("Failed to fetch user:", err);
-//     //         setError("Failed to fetch user data");
-//     //     }
-//     // };
 //     const getSingleUser = async () => {
-//         debugger
 //         try {
-//             // const response = await axiosInstance.get(`${baseUrl}/${id}`);
-//             const response = await axiosInstance.get(`/${id}`, {
+//             const response = await axiosInstance.get(`/get/${id}`, {
 //                 headers: {
 //                     'Authorization': `Bearer ${user.accessToken}`
 //                 },
@@ -70,7 +40,6 @@
 //                 const result = response.data;
 //                 setName(result.name);
 //                 setEmail(result.email);
-//                 // setImage(result.image);
 //             } else {
 //                 setError("Failed to fetch user data");
 //             }
@@ -79,34 +48,8 @@
 //             setError("Failed to fetch user data");
 //         }
 //     };
-//     // const getSingleUser = async () => {
-//     //     try {
-//     //         const response = await axios.get (`http://localhost:5001/${id}`, {
-//     //             headers: {
-//     //                 Authorization: `Bearer ${user.accessToken}`
-//     //             }
-//     //         });
-
-//     //         const result = await response.json();
-
-//     //         if (!response.ok) {
-//     //             console.error(result.error);
-//     //             setError(result.error);
-//     //         } else {
-//     //             setError("");
-//     //             setName(result.name);
-//     //             setEmail(result.email);
-//     //             setImage(result.image);
-//     //         }
-//     //     } catch (err) {
-//     //         console.error("Failed to fetch user:", err);
-//     //         setError("Failed to fetch user data");
-//     //     }
-//     // };
-
 
 //     const handleUpdate = async (e) => {
-//         debugger
 //         e.preventDefault();
 //         let isError = false;
 
@@ -124,19 +67,13 @@
 //             setNameError("Please Enter Valid Name");
 //             isError = true;
 //         }
-//         // if (!image) {
-//         //     setImageError("Please Select Image");
-//         //     isError = true;
-//         // }
+
 //         if (!isError) {
 //             const formData = new FormData();
 //             formData.append("name", name);
 //             formData.append("email", email);
-//             // formData.append("image", image);
 
 //             try {
-//                 // const response = await axiosInstance.patch(`${baseUrl}/${id}`, formData);
-
 //                 const response = await axiosInstance.patch(`/update/${id}`, formData, {
 //                     headers: {
 //                         'Authorization': `Bearer ${user.accessToken}`
@@ -153,135 +90,66 @@
 //                 toast.error("Failed to update user");
 //             }
 //         }
-
-//         // if (!isError) {
-//         //     const formData = new FormData();
-//         //     formData.append("name", name);
-//         //     formData.append("email", email);
-//         //     formData.append("image", image);
-
-//         //     try {
-//         //         const response = await axios.patch(`http://localhost:5001/${id}`, {
-//         //             // method: "PATCH",
-//         //             headers: {
-//         //                 Authorization: `Bearer ${user.accessToken}`
-//         //             },
-//         //             body: formData,
-//         //         });
-
-//         //         const result = await response.json();
-//         //         if (!response.ok) {
-//         //             console.error(result.error);
-//         //             toast.error(result.message);
-//         //         } else {
-//         //             setError("");
-//         //             navigate("/users");
-//         //             toast.success("Update Successful");
-//         //         }
-//         //     } catch (err) {
-//         //         console.error("Error submitting form:", err);
-//         //         toast.error("Failed to update user");
-//         //     }
-//         // }
 //     };
-
 
 //     useEffect(() => {
 //         getSingleUser();
 //     }, [id]);
 
 //     return (
-//         <div>
-//             <div align="center">
-//                 <div>
-//                     <Avatar style={avatarStyle} my-20>
-//                         <PersonAddAltTwoToneIcon />
-//                     </Avatar>
-//                     <h2 style={{ color: "blue" }}>Edit The Data</h2>
-//                 </div>
+//         <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
+//             <Grid item xs={11} sm={8} md={6} lg={4}>
+//                 <form onSubmit={handleUpdate}>
+//                     <Grid container direction="column" alignItems="center">
+//                         <Avatar style={avatarStyle}>
+//                             <PersonAddAltTwoToneIcon />
+//                         </Avatar>
+//                         <h2 style={{ color: "blue" }}>Edit The Data</h2>
 
-//                 <div>
-//                     <TextField
-//                         type="text"
-//                         id="name"
-//                         name="name"
-//                         label="Name"
-//                         variant="outlined"
-//                         placeholder="Enter Name"
-//                         value={name}
-//                         onChange={onChangeName}
-//                         required
-//                         style={{ margin: "10px", width: "400px" }}
-//                     />
-//                     <span
-//                         style={{
-//                             display: "flex",
-//                             justifyContent: "left",
-//                             marginLeft: "510px",
-//                             color: "red",
-//                             marginTop: "-10px",
-//                         }}
-//                     >
-//                         {nameError}
-//                     </span>
-//                 </div>
-//                 <div>
-//                     <TextField
-//                         type="text"
-//                         id="email"
-//                         name="email"
-//                         label="Email"
-//                         variant="outlined"
-//                         placeholder="Enter Email"
-//                         value={email}
-//                         onChange={onChangeEmail}
-//                         required
-//                         style={{ margin: "10px", width: "400px" }}
-//                     />
-//                     <span
-//                         style={{
-//                             display: "flex",
-//                             justifyContent: "left",
-//                             marginLeft: "510px",
-//                             color: "red",
-//                             marginTop: "-10px",
-//                         }}
-//                     >
-//                         {emailError}
-//                     </span>
-//                 </div>
-//                 {/* <div className="mb-3">
-//                     <input
-//                         className="form-control"
-//                         type="file"
-//                         id="formFile"
-//                         onChange={onChangeImage}
-//                         style={{ margin: "10px", width: "400px" }}
-//                     />
-//                     <span
-//                         style={{
-//                             display: "flex",
-//                             justifyContent: "left",
-//                             marginLeft: "510px",
-//                             color: "red",
-//                             marginTop: "-10px",
-//                         }}
-//                     >
-//                         {imageError}
-//                     </span>
-//                 </div> */}
-//                 <Button
-//                     type="submit"
-//                     color="primary"
-//                     onClick={handleUpdate}
-//                     variant="contained"
-//                     style={{ marginTop: "20px" }}
-//                 >
-//                     Submit
-//                 </Button>
-//             </div>
-//             <ToastContainer />
-//         </div>
+//                         <TextField
+//                             type="text"
+//                             id="name"
+//                             name="name"
+//                             label="Name"
+//                             variant="outlined"
+//                             placeholder="Enter Name"
+//                             value={name}
+//                             onChange={onChangeName}
+//                             fullWidth
+//                             margin="normal"
+//                             error={!!nameError}
+//                             helperText={nameError}
+//                         />
+
+//                         <TextField
+//                             type="text"
+//                             id="email"
+//                             name="email"
+//                             label="Email"
+//                             variant="outlined"
+//                             placeholder="Enter Email"
+//                             value={email}
+//                             onChange={onChangeEmail}
+//                             fullWidth
+//                             margin="normal"
+//                             error={!!emailError}
+//                             helperText={emailError}
+//                         />
+
+//                         {error && (
+//                             <Alert severity="error" style={{ width: '100%', margin: '10px 0' }}>
+//                                 {error}
+//                             </Alert>
+//                         )}
+
+//                         <Button type="submit" color="primary" variant="contained" fullWidth style={{ marginTop: "20px" }}>
+//                             Submit
+//                         </Button>
+//                     </Grid>
+//                 </form>
+//                 <ToastContainer />
+//             </Grid>
+//         </Grid>
 //     );
 // };
 
@@ -291,13 +159,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
-import { Avatar, TextField, Button, Grid, Alert } from "@mui/material";
+import { Avatar, TextField, Button, Grid, Alert, Typography } from "@mui/material";
 import { selectUser } from "../features/userSlice";
 import { useSelector } from "react-redux";
 import axiosInstance from "./axiosInstance";
 
 const EditUser = () => {
-    const avatarStyle = { backgroundColor: "grey", margin: "20px" };
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [nameError, setNameError] = useState("");
@@ -386,55 +253,65 @@ const EditUser = () => {
 
     return (
         <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
-            <Grid item xs={11} sm={8} md={6} lg={4}>
-                <form onSubmit={handleUpdate}>
-                    <Grid container direction="column" alignItems="center">
-                        <Avatar style={avatarStyle}>
-                            <PersonAddAltTwoToneIcon />
-                        </Avatar>
-                        <h2 style={{ color: "blue" }}>Edit The Data</h2>
-
-                        <TextField
-                            type="text"
-                            id="name"
-                            name="name"
-                            label="Name"
-                            variant="outlined"
-                            placeholder="Enter Name"
-                            value={name}
-                            onChange={onChangeName}
-                            fullWidth
-                            margin="normal"
-                            error={!!nameError}
-                            helperText={nameError}
-                        />
-
-                        <TextField
-                            type="text"
-                            id="email"
-                            name="email"
-                            label="Email"
-                            variant="outlined"
-                            placeholder="Enter Email"
-                            value={email}
-                            onChange={onChangeEmail}
-                            fullWidth
-                            margin="normal"
-                            error={!!emailError}
-                            helperText={emailError}
-                        />
-
-                        {error && (
-                            <Alert severity="error" style={{ width: '100%', margin: '10px 0' }}>
-                                {error}
-                            </Alert>
-                        )}
-
-                        <Button type="submit" color="primary" variant="contained" fullWidth style={{ marginTop: "20px" }}>
-                            Submit
-                        </Button>
-                    </Grid>
-                </form>
+            <Grid item xs={12} sm={8} md={6} lg={4}>
+                <div style={{ padding: '20px', border: '1px solid #ddd', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                    <form onSubmit={handleUpdate}>
+                        <Grid container direction="column" alignItems="center">
+                            <Avatar style={{ backgroundColor: "grey", margin: "20px" }}>
+                                <PersonAddAltTwoToneIcon />
+                            </Avatar>
+                            <Typography variant="h4" style={{ color: "blue", marginBottom: "20px" }}>Edit The Data</Typography>
+                        </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    label="Name"
+                                    variant="outlined"
+                                    placeholder="Enter Name"
+                                    value={name}
+                                    onChange={onChangeName}
+                                    fullWidth
+                                    error={!!nameError}
+                                    helperText={nameError}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    label="Email"
+                                    variant="outlined"
+                                    placeholder="Enter Email"
+                                    value={email}
+                                    onChange={onChangeEmail}
+                                    fullWidth
+                                    error={!!emailError}
+                                    helperText={emailError}
+                                />
+                            </Grid>
+                            {error && (
+                                <Grid item xs={12}>
+                                    <Alert severity="error">{error}</Alert>
+                                </Grid>
+                            )}
+                            <Grid item xs={12}>
+                                <Button
+                                    type="submit"
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    style={{ marginTop: "10px", marginBottom: "15px" }}
+                                >
+                                    Submit
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </div>
                 <ToastContainer />
             </Grid>
         </Grid>
