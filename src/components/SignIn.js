@@ -172,7 +172,7 @@
 // export default SignIn;
 import React, { useState } from 'react';
 import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
-import { Avatar, Button, TextField, IconButton, InputAdornment, Grid, Typography, Alert } from '@mui/material';
+import { Avatar, Button, TextField, IconButton, InputAdornment, Grid, Typography, Alert, CircularProgress } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -192,6 +192,7 @@ function SignIn() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector(selectUser);
+    const [loading, setLoading] = useState(false);
 
     const onChangeEmail = (e) => {
         setEmail(e.target.value);
@@ -241,6 +242,7 @@ function SignIn() {
 
         if (!isError) {
             const addUser = { email, password };
+            setLoading(true);
 
             try {
                 const response = await axiosInstance.post(`/signin`, addUser, {
@@ -254,13 +256,16 @@ function SignIn() {
                     dispatch(login({ accessToken: jwtToken, user }));
                     toast.success("Login successful");
                     navigate("/users");
+                    setLoading(false)
                 } else {
                     console.error("Login failed with status:", response.status);
                     setError(response.data.message || "Login failed. Please try again.");
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error("Error submitting form:", error);
                 setError("Login failed. Please try again.");
+                setLoading(false);
             }
         }
     };
@@ -332,8 +337,10 @@ function SignIn() {
                                     variant="contained"
                                     fullWidth
                                     style={{ marginTop: "10px", marginBottom: "15px" }}
+                                    disabled={loading}
                                 >
-                                    Submit
+                                    {loading ? <CircularProgress  size={24}/> : "Submit"}
+                                    {/* Submit */}
                                 </Button>
                             </Grid>
                         </Grid>
