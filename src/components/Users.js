@@ -520,8 +520,12 @@ const Users = () => {
     const user = useSelector(selectUser);
 
     const columns = [
-        { field: 'name', headerName: 'Name', sortable: false, width: 250, editable: false },
-        { field: 'email', headerName: 'Email', sortable: false, width: 250, editable: false },
+        { field: 'name', headerName: 'Name', sortable: false, width: 225, editable: false },
+        { field: 'email', headerName: 'Email', sortable: false, width: 225, editable: false },
+        { field: 'contact', headerName: 'Contact No', sortable: false, width: 225, editable: false },
+        { field: 'city', headerName: 'City', sortable: false, width: 225, editable: false },
+
+
         {
             field: 'actions',
             headerName: 'Actions',
@@ -625,6 +629,8 @@ const Users = () => {
                 id: item._id,
                 name: item.name,
                 email: item.email,
+                contact:item.contact,
+                city:item.city,
             }));
             // Reverse the data to show newest users first
             setData(formattedData.reverse());
@@ -653,6 +659,8 @@ const Users = () => {
                 id: item._id,
                 name: item.name,
                 email: item.email,
+                contact:item.contact,
+                city:item.city,
             }));
             setData(formattedData);
         } catch (error) {

@@ -204,6 +204,10 @@ function Addusersfromfab() {
     const [nameError, setNameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [contact, setContact] = useState("");
+    const [contactnoError, setContactnoError] = useState("");
+    const [city, setCity] = useState("");
+    const [cityError, setCityError] = useState("");
     const navigate = useNavigate();
     const user = useSelector(selectUser);
     // const accessToken = user ? user.accessToken : null;
@@ -220,6 +224,24 @@ function Addusersfromfab() {
         setEmailError("");
         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(e.target.value)) {
             setEmailError("Please Enter Valid Email");
+        }
+    };
+    const onChangeContactno = (e) => {
+        setContact(e.target.value);
+        setContactnoError("");
+        if ( /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(e.target.value)) {
+            setContactnoError("");
+        }
+        else{
+            setContactnoError("Please Enter Valid Contact No");
+
+        }
+    };
+    const onChangeCity = (e) => {
+        setCity(e.target.value);
+        setCityError("");
+        if (!/^[a-zA-Z]+$/.test(e.target.value)) {
+            setCityError("Please Enter Valid City");
         }
     };
     const onChangePassword = (e) => {
@@ -253,10 +275,16 @@ function Addusersfromfab() {
         } else if (password.length < 6) {
             setPasswordError("Password must be 6 characters");
             isError = true;
+        }  if (!city) {
+            setCityError("Please Enter City");
+            isError = true;
+        }if (!contact) {
+            setContactnoError("Please Enter Contact No");
+            isError = true;
         }
 
         if (!isError) {
-            const addUser2 = { name, email, password };
+            const addUser2 = { name,email,contact,city,password };
 
             try {
                 const response = await axiosInstance.post(`/nm`, addUser2, {
@@ -269,6 +297,8 @@ function Addusersfromfab() {
                     const result = response.data;
                     setName("");
                     setEmail("");
+                    setCity("");
+                    setContact("");
                     setPassword("");
                     // Only update the Redux state if the user is adding another user
                     // const user = { name, email };
@@ -330,6 +360,36 @@ function Addusersfromfab() {
                                     fullWidth
                                     error={!!emailError}
                                     helperText={emailError}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    type="text"
+                                    id="contact"
+                                    name="contact"
+                                    label="Contact No"
+                                    variant="outlined"
+                                    placeholder="Enter Contact No"
+                                    value={contact}
+                                    onChange={onChangeContactno}
+                                    fullWidth
+                                    error={!!contactnoError}
+                                    helperText={contactnoError}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    label="City"
+                                    variant="outlined"
+                                    placeholder="Enter City"
+                                    value={city}
+                                    onChange={onChangeCity}
+                                    fullWidth
+                                    error={!!cityError}
+                                    helperText={cityError}
                                 />
                             </Grid>
                             <Grid item xs={12}>
