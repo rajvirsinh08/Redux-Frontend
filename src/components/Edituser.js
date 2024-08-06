@@ -224,12 +224,14 @@ const EditUser = () => {
         }
 
         if (!isError) {
-            const formData = new FormData();
-            formData.append("name", name);
-            formData.append("email", email);
+            // const formData = new FormData();
+            // formData.append("name", name);
+            // formData.append("email", email);
+            const editUser1 = { name, email };
+
 
             try {
-                const response = await axiosInstance.patch(`/update/${id}`, formData, {
+                const response = await axiosInstance.patch(`/update/${id}`, editUser1, {
                     headers: {
                         'Authorization': `Bearer ${user.accessToken}`
                     },
