@@ -82,6 +82,7 @@ function SignIn() {
                 if (response.status === 200) {
                     const { jwtToken, user } = response.data;
                     dispatch(login({ accessToken: jwtToken, user }));
+                    console.log("jwt token",jwtToken);
                     toast.success("Login successful");
                     navigate("/users");
                     setLoading(false)
