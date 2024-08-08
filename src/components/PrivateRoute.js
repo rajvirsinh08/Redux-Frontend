@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }) => {
   const accessToken = user ? user.accessToken : null;
 
   if (!accessToken) {
-    return <Navigate to="/signin" />;
+    return <Navigate to="/signin"  replace="true"/>;
   }
 
   try {
@@ -22,11 +22,11 @@ const PrivateRoute = ({ children }) => {
 
     // Check if token is expired (considering a 1-minute expiry)
     if (currentTimeInSeconds >= exp) {
-      return <Navigate to="/signin" />;
+      return <Navigate to="/signin" replace="true" />;
     }
   } catch (e) {
     console.error("Token parsing error:", e);
-    return <Navigate to="/signin" />;
+    return <Navigate to="/signin"  replace="true" />;
   }
 
   return children;

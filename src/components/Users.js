@@ -202,7 +202,7 @@ const handleCreateUser = (e) => {
             );
             console.log(`Logout response: ${response.data}`);
             dispatch(logout());
-            navigate("/signin");
+            navigate("/signin", { replace: true });
           } catch (error) {
             setError(error.message);
             console.log(error);

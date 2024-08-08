@@ -8,6 +8,7 @@ function Not_found() {
             <p style={{ fontSize: '1.2em', marginBottom: '20px' }}>Sorry, the page you are looking for does not exist.</p>
             <NavLink
                 to="/"
+                replace="true"
                 style={{ color: '#007bff', textDecoration: 'none', fontSize: '1.2em' }}
                 onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
                 onMouseOut={(e) => e.target.style.textDecoration = 'none'}
