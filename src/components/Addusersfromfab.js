@@ -7,6 +7,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axiosInstance from "./axiosInstance";
 import { makeStyles } from "@mui/styles";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const useStyles = makeStyles((theme) => ({
   helperText: {
@@ -25,8 +30,11 @@ function Addusersfromfab() {
   const [contactnoError, setContactnoError] = useState("");
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
+  const [dob, setDob] = useState(dayjs());
+
   const navigate = useNavigate();
   const user = useSelector(selectUser);
+
   // const accessToken = user ? user.accessToken : null;
   const classes = useStyles();
 
@@ -69,6 +77,9 @@ function Addusersfromfab() {
       setPasswordError("Password must be 6 characters");
     }
   };
+  const onChangeDob = (newValue) => {
+    setDob(newValue);
+  };
   const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,7 +115,8 @@ function Addusersfromfab() {
     }
 
     if (!isError) {
-      const addUser2 = { name, email, contact, city, password };
+      const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
+      const addUser2 = { name, email, contact, dob: formattedDob, city, password };
 
       try {
         const response = await axiosInstance.post(`/nm`, addUser2, {
@@ -118,6 +130,7 @@ function Addusersfromfab() {
           setName("");
           setEmail("");
           setCity("");
+          setDob(dayjs());
           setContact("");
           setPassword("");
           // Only update the Redux state if the user is adding another user
@@ -218,6 +231,20 @@ function Addusersfromfab() {
                   helperText={contactnoError}
                   FormHelperTextProps={{ className: classes.helperText }}
                 />
+              </Grid>
+              <Grid item xs={12} sx={{ marginTop: "-10px" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      label="Date of Birth"
+                      sx={{ width: "100% " }}
+                      value={dob}
+                      onChange={onChangeDob}
+
+                      // slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </Grid>
               <Grid item xs={12}>
                 <TextField

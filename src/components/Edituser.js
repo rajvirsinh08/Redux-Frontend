@@ -15,6 +15,11 @@ import { selectUser } from "../features/userSlice";
 import { useSelector } from "react-redux";
 import axiosInstance from "./axiosInstance";
 import { makeStyles } from "@mui/styles";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 const useStyles = makeStyles((theme) => ({
   helperText: {
     position: "relative",
@@ -33,6 +38,8 @@ const EditUser = () => {
   const [contactError, setContactError] = useState("");
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
+  const [dob, setDob] = useState(dayjs());
+
   const { id } = useParams();
   const classes = useStyles();
 
@@ -54,7 +61,10 @@ const EditUser = () => {
     setContact(e.target.value);
     setContactError("");
   };
-
+  const onChangeDob = (newValue) => {
+    setDob(dayjs(newValue)); // Ensure newValue is converted to a dayjs object
+  };
+  
   const getSingleUser = async () => {
     try {
       const response = await axiosInstance.get(`/get/${id}`, {
@@ -68,6 +78,8 @@ const EditUser = () => {
         setEmail(result.email);
         setCity(result.city);
         setContact(result.contact);
+        // setDob(result.dob);
+        setDob(dayjs(result.dob)); // Convert the fetched dob to a dayjs object
       } else {
         setError("Failed to fetch user data");
       }
@@ -108,7 +120,7 @@ const EditUser = () => {
       // const formData = new FormData();
       // formData.append("name", name);
       // formData.append("email", email);
-      const editUser1 = { name, email, city, contact };
+      const editUser1 = { name, email,  dob: dob.format("YYYY-MM-DD"), city, contact };
 
       try {
         const response = await axiosInstance.patch(`/update/${id}`, editUser1, {
@@ -225,6 +237,22 @@ const EditUser = () => {
                   helperText={contactError}
                   FormHelperTextProps={{ className: classes.helperText }}
                 />
+              </Grid>
+              <Grid item xs={12} sx={{ marginTop: "-10px" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      label="Date of Birth"
+                      sx={{ width: "100% " }}
+                      value={dob}
+                      onChange={onChangeDob}
+                      minDate={dayjs("1900-01-01")}
+                      maxDate={dayjs("2006-01-01")}
+                      views={["year", "month", "day"]}
+                      // slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </Grid>
               {error && (
                 <Grid item xs={12}>

@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
-import { Avatar, Button, TextField, Grid, Typography } from "@mui/material";
+import { Avatar, Button, TextField, Grid, Typography, CircularProgress } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectUser } from "../features/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axiosInstance from "./axiosInstance";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import { createRoot } from "react-dom/client";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
+// const API_KEY = globalThis.GOOGLE_MAPS_API_KEY ?? "AIzaSyC_KSN9eaRLTgKh16aZ5EAUEgRif-sUERQ";
+const API_KEY = "AIzaSyC_KSN9eaRLTgKh16aZ5EAUEgRif-sUERQ";
 const useStyles = makeStyles((theme) => ({
   helperText: {
     position: "relative",
@@ -25,6 +33,11 @@ function SignUp() {
   const [contactnoError, setContactnoError] = useState("");
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
+  // const [dob, setDob] = useState("");
+  const [dob, setDob] = useState(dayjs("2006-01-01"));
+  // const API_KEY = "AIzaSyC_KSN9eaRLTgKh16aZ5EAUEgRif-sUERQ";
+  const libraries = ["places"];
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const user = useSelector(selectUser);
@@ -77,6 +90,40 @@ function SignUp() {
       setPasswordError("Password must be 6 characters");
     }
   };
+  const onChangeDob = (newValue) => {
+    setDob(newValue);
+  };
+  // const onChangeDob = (e) => {
+  //   setDob(e.target.value);
+
+  // };
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: API_KEY,
+    libraries,
+  });
+  const autocompleteRef = useRef(null);
+
+  const onLoad = (autocomplete) => {
+    autocompleteRef.current = autocomplete;
+  };
+
+  const onPlaceChanged = () => {
+    if (autocompleteRef.current !== null) {
+      const place = autocompleteRef.current.getPlace();
+      if (place.address_components) {
+        const cityComponent = place.address_components.find((component) =>
+          component.types.includes("locality")
+        );
+        if (cityComponent) {
+          setCity(cityComponent.long_name);
+          setCityError("");
+        } else {
+          setCity("");
+          setCityError("Please select a valid city");
+        }
+      }
+    }
+  };
 
   const dispatch = useDispatch();
 
@@ -119,7 +166,18 @@ function SignUp() {
       // formData.append("name", name);
       // formData.append("email", email);
       // formData.append("password", password);
-      const addUser1 = { name, email, contact, city, password };
+      // const addUser1 = { name, email, contact,dob, city, password };
+      const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
+      const addUser1 = {
+        name,
+        email,
+        contact,
+        dob: formattedDob,
+        city,
+        password,
+      };
+      setLoading(true);
+
 
       try {
         const response = await axiosInstance.post(`/nm`, addUser1, {
@@ -134,12 +192,22 @@ function SignUp() {
           setName("");
           setEmail("");
           setCity("");
+          // setDob("");
+          setDob(dayjs("2006-01-01"));
           setContact("");
           setPassword("");
-          const user = { name, email, contact, city };
+          const user = {
+            name,
+            email,
+            contact,
+            dob: dob.format("YYYY-MM-DD"),
+            city,
+          };
           dispatch(login({ user }));
           toast.success("Sign up successful");
           navigate("/signin", { replace: true });
+          setLoading(false);
+
         } else {
           const errorData = response.data;
           if (errorData.message === "Email already in use") {
@@ -149,10 +217,14 @@ function SignUp() {
               errorData.message || "Failed to sign up. Please try again."
             );
           }
+          setLoading(false);
+
         }
       } catch (error) {
         console.error("Error submitting form:", error);
         toast.error("Failed to sign up. Please try again.");
+        setLoading(false);
+
       }
     }
   };
@@ -234,7 +306,57 @@ function SignUp() {
                   FormHelperTextProps={{ className: classes.helperText }}
                 />
               </Grid>
+              <Grid item xs={12} sx={{ marginTop: "-10px" }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      label="Date of Birth"
+                      sx={{ width: "100% " }}
+                      value={dob}
+                      onChange={onChangeDob}
+                      minDate={dayjs("1900-01-01")}
+                      maxDate={dayjs("2006-01-01")}
+                      views={["year", "month", "day"]}
+                      // slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </Grid>
               <Grid item xs={12}>
+                {isLoaded ? (
+                  <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                    <TextField
+                      type="text"
+                      id="city"
+                      name="city"
+                      label="City"
+                      variant="outlined"
+                      placeholder="Enter City"
+                      value={city}
+                      onChange={(e) => {
+                        setCity(e.target.value);
+                        setCityError("");
+                      }}
+                      fullWidth
+                      error={!!cityError}
+                      helperText={cityError}
+                      FormHelperTextProps={{ className: classes.helperText }}
+                    />
+                  </Autocomplete>
+                ) : (
+                  <TextField
+                    type="text"
+                    id="city"
+                    name="city"
+                    label="City"
+                    variant="outlined"
+                    placeholder="Loading..."
+                    fullWidth
+                    disabled
+                  />
+                )}
+              </Grid>
+              {/* <Grid item xs={12}>
                 <TextField
                   type="text"
                   id="city"
@@ -249,7 +371,7 @@ function SignUp() {
                   helperText={cityError}
                   FormHelperTextProps={{ className: classes.helperText }}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   type="password"
@@ -273,8 +395,9 @@ function SignUp() {
                   variant="contained"
                   fullWidth
                   style={{ marginTop: "10px", marginBottom: "15px" }}
+                  disabled={loading}
                 >
-                  Submit
+                   {loading ? <CircularProgress size={24} /> : "Submit"}
                 </Button>
               </Grid>
             </Grid>

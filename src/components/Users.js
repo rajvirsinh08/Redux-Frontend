@@ -54,6 +54,13 @@ const Users = () => {
       editable: false,
     },
     {
+      field: "dob",
+      headerName: "Date of Birth",
+      sortable: false,
+      width: 225,
+      editable: false,
+    },
+    {
       field: "city",
       headerName: "City",
       sortable: false,
@@ -235,6 +242,7 @@ const handleCreateUser = (e) => {
         name: item.name,
         email: item.email,
         contact: item.contact,
+        dob: item.dob,
         city: item.city,
       }));
       // Reverse the data to show newest users first
@@ -268,6 +276,7 @@ const handleCreateUser = (e) => {
         name: item.name,
         email: item.email,
         contact: item.contact,
+        dob: item.dob,
         city: item.city,
       }));
       setData(formattedData);
