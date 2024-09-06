@@ -64,7 +64,7 @@ const EditUser = () => {
   const onChangeDob = (newValue) => {
     setDob(dayjs(newValue)); // Ensure newValue is converted to a dayjs object
   };
-  
+
   const getSingleUser = async () => {
     try {
       const response = await axiosInstance.get(`/get/${id}`, {
@@ -120,7 +120,13 @@ const EditUser = () => {
       // const formData = new FormData();
       // formData.append("name", name);
       // formData.append("email", email);
-      const editUser1 = { name, email,  dob: dob.format("YYYY-MM-DD"), city, contact };
+      const editUser1 = {
+        name,
+        email,
+        dob: dob.format("DD-MM-YYYY"),
+        city,
+        contact,
+      };
 
       try {
         const response = await axiosInstance.patch(`/update/${id}`, editUser1, {
@@ -246,9 +252,10 @@ const EditUser = () => {
                       sx={{ width: "100% " }}
                       value={dob}
                       onChange={onChangeDob}
-                      minDate={dayjs("1900-01-01")}
-                      maxDate={dayjs("2006-01-01")}
-                      views={["year", "month", "day"]}
+                      minDate={dayjs("01-01-1900")}
+                      maxDate={dayjs("01-01-2006")}
+                      views={["day", "month", "year"]}
+                      format="DD/MM/YYYY"
                       // slotProps={{ textField: { fullWidth: true } }}
                     />
                   </DemoContainer>

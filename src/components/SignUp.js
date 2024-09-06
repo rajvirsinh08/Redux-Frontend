@@ -167,7 +167,7 @@ function SignUp() {
       // formData.append("email", email);
       // formData.append("password", password);
       // const addUser1 = { name, email, contact,dob, city, password };
-      const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
+      const formattedDob = dob ? dob.format("DD-MM-YYYY") : "";
       const addUser1 = {
         name,
         email,
@@ -180,10 +180,11 @@ function SignUp() {
 
 
       try {
-        const response = await axiosInstance.post(`/nm`, addUser1, {
+        const response = await axiosInstance.post(`/users/nm`, addUser1, {
           headers: {
             // 'Content-Type': 'multipart/form-data'
-            "Content-Type": "application/json",
+            "Content-Type": "application/json", 
+            
           },
         });
 
@@ -193,14 +194,14 @@ function SignUp() {
           setEmail("");
           setCity("");
           // setDob("");
-          setDob(dayjs("2006-01-01"));
+          setDob(dayjs("01-01-2006"));
           setContact("");
           setPassword("");
           const user = {
             name,
             email,
             contact,
-            dob: dob.format("YYYY-MM-DD"),
+            dob: dob.format("DD-MM-YYYY"),
             city,
           };
           dispatch(login({ user }));
@@ -316,7 +317,7 @@ function SignUp() {
                       onChange={onChangeDob}
                       minDate={dayjs("1900-01-01")}
                       maxDate={dayjs("2006-01-01")}
-                      views={["year", "month", "day"]}
+                      views={["day", "month", "year"]}
                       // slotProps={{ textField: { fullWidth: true } }}
                     />
                   </DemoContainer>

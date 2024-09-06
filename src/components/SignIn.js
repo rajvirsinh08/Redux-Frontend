@@ -91,7 +91,7 @@ function SignIn() {
       setLoading(true);
 
       try {
-        const response = await axiosInstance.post(`/signin`, addUser, {
+        const response = await axiosInstance.post(`/users/signin`, addUser, {
           headers: {
             "Content-Type": "application/json",
           },

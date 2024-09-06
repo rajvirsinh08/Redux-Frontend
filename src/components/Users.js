@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { logout, selectUser } from "../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,70 +9,90 @@ import axiosInstance from "./axiosInstance";
 import { Audio } from "react-loader-spinner";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box } from "@mui/system";
-import {
-  Button,
-  Typography,
-  Container,
-  Grid,
-  TextField,
-  Fab,
-} from "@mui/material";
+import { Button, Typography, Container, Grid, TextField } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 import debounce from "lodash.debounce";
 import axios from "axios";
-import AddIcon from "@mui/icons-material/Add";
 
 const Users = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
+  const [name, setTaskname] = useState("");
+  const [describe, setDescribe] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searching, setSearching] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const [open, setOpen] = useState(false);
+
+  const [editingTask, setEditingTask] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleClickOpen = (task = null) => {
+    setEditingTask(task);
+    setIsEditing(!!task);
+    setTaskname(task ? task.name : "");
+    setDescribe(task ? task.describe : "");
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setTaskname("");
+    setDescribe("");
+    setEditingTask(null);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const taskData = { name, describe };
+
+    setLoading(true);
+    try {
+      if (isEditing) {
+        await axiosInstance.patch(
+          `/task/updatetask/${editingTask.id}`,
+          taskData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.accessToken}`,
+            },
+          }
+        );
+        toast.success("Task updated successfully");
+      } else {
+        await axiosInstance.post(`/task/addtask`, taskData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        });
+        toast.success("Task added successfully");
+      }
+
+      handleClose();
+      getData();
+    } catch (error) {
+      toast.error("Failed to save task. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const columns = [
-    {
-      field: "name",
-      headerName: "Name",
-      sortable: false,
-      width: 225,
-      editable: false,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      sortable: false,
-      width: 225,
-      editable: false,
-    },
-    {
-      field: "contact",
-      headerName: "Contact No",
-      sortable: false,
-      width: 225,
-      editable: false,
-    },
-    {
-      field: "dob",
-      headerName: "Date of Birth",
-      sortable: false,
-      width: 225,
-      editable: false,
-    },
-    {
-      field: "city",
-      headerName: "City",
-      sortable: false,
-      width: 225,
-      editable: false,
-    },
-
+    { field: "name", headerName: "Task Name", width: 225 },
+    { field: "describe", headerName: "Description", width: 225 },
     {
       field: "actions",
       headerName: "Actions",
       width: 200,
-      sortable: false,
       renderCell: (params) => (
         <div>
           <Button
@@ -80,7 +100,7 @@ const Users = () => {
             color="primary"
             size="small"
             style={{ marginRight: 16 }}
-            onClick={() => navigate(`/edituser/${params.row.id}`)}
+            onClick={() => handleClickOpen(params.row)}
           >
             Edit
           </Button>
@@ -107,158 +127,92 @@ const Users = () => {
           onClick: async () => {
             try {
               setLoading(true);
-              await axiosInstance.delete(`/delete/${id}`, {
+              await axiosInstance.delete(`/task/deletetask/${id}`, {
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${user.accessToken}`,
                 },
               });
-              setLoading(false);
               setError("Deleted successfully");
               setTimeout(() => {
                 setError("");
                 getData();
               }, 1000);
             } catch (error) {
-              setLoading(false);
               setError(error.message);
-              console.log(error);
+            } finally {
+              setLoading(false);
             }
           },
         },
-        {
-          label: "No",
-        },
+        { label: "No" },
       ],
     });
   };
 
-//   const handleCreateUser = (e) => {
-//       e.preventDefault();
-//       confirmAlert({
-//           title: 'Confirm to logout',
-//           message: 'Are you sure you want to logout?',
-//           buttons: [
-//               {
-//                   label: 'Yes',
-//                   onClick: () => {
-//                       dispatch(logout());
-//                       navigate('/signin');
-//                   }
-//               },
-//               {
-//                   label: 'No',
-//               }
-//           ]
-//       });
-//   };
-//   const handleCreateUser = (e) => {
-//     debugger
-//     e.preventDefault();
-//     confirmAlert({
-//       title: "Confirm to logout",
-//       message: "Are you sure you want to logout?",
-//       buttons: [
-//         {
-//           label: "Yes",
-//           onClick: async () => {
-//             try {
-//               await axiosInstance.post(
-//                 `/logout`,
-//                 {},
-//                 {
-//                   headers: {
-//                     "Content-Type": "application/json",
-//                     Authorization: `Bearer ${user.accessToken}`,
-//                   },
-//                 }
-//               );
-//               dispatch(logout());
-//               navigate("/signin");
-//             } catch (error) {
-//               setError(error.message);
-//               console.log(error);
-//             }
-//           },
-//         },
-//         {
-//           label: "No",
-//         },
-//       ],
-//     });
-//   };
-const handleCreateUser = (e) => {
-  e.preventDefault();
-  confirmAlert({
-    title: "Confirm to logout",
-    message: "Are you sure you want to logout?",
-    buttons: [
-      {
-        label: "Yes",
-        onClick: async () => {
-          try {
-            const response = await axiosInstance.post(
-              `/logout`,
-              {},
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${user.accessToken}`,
-                },
-              }
-            );
-            console.log(`Logout response: ${response.data}`);
-            dispatch(logout());
-            navigate("/signin", { replace: true });
-          } catch (error) {
-            setError(error.message);
-            console.log(error);
-          }
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    confirmAlert({
+      title: "Confirm to logout",
+      message: "Are you sure you want to logout?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            try {
+              await axiosInstance.post(
+                `users/logout`,
+                {},
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${user.accessToken}`,
+                  },
+                }
+              );
+              dispatch(logout());
+              navigate("/signin", { replace: true });
+            } catch (error) {
+              setError(error.message);
+            }
+          },
         },
-      },
-      {
-        label: "No",
-      },
-    ],
-  });
-};
+        { label: "No" },
+      ],
+    });
+  };
 
   useEffect(() => {
     getData();
   }, []);
 
-  async function getData() {
+  const getData = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/get`, {
+      const response = await axiosInstance.get(`/task/alltask`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.accessToken}`,
         },
       });
-      setLoading(false);
-      const formattedData = response.data.map((item) => ({
-        id: item._id,
-        name: item.name,
-        email: item.email,
-        contact: item.contact,
-        dob: item.dob,
-        city: item.city,
-      }));
-      // Reverse the data to show newest users first
-      setData(formattedData.reverse());
+      const formattedData = response.data
+        .map((item) => ({
+          id: item._id,
+          name: item.name,
+          describe: item.describe,
+        }))
+        .reverse();
+      setData(formattedData);
     } catch (error) {
-      setLoading(false);
       setError(error.message);
-      console.log(error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  async function searchUsers(query) {
+  const searchUsers = async (query) => {
     try {
-      // setSearching(true);
       setLoading(true);
-
       const response = await axios.get(
         `http://localhost:5001/api/users/search?query=${query}`,
         {
@@ -268,26 +222,18 @@ const handleCreateUser = (e) => {
           },
         }
       );
-      setLoading(false);
-
-      // setSearching(false);
       const formattedData = response.data.map((item) => ({
         id: item._id,
-        name: item.name,
-        email: item.email,
-        contact: item.contact,
-        dob: item.dob,
-        city: item.city,
+        Name: item.Name,
+        describe: item.describe,
       }));
       setData(formattedData);
     } catch (error) {
-      // setSearching(false);
-      setLoading(false);
-
       setError(error.message);
-      console.log(error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   const debouncedSearch = useCallback(
     debounce((query) => {
@@ -317,7 +263,7 @@ const handleCreateUser = (e) => {
         justifyContent="space-between"
         style={{ marginBottom: "30px", marginTop: "10px" }}
       >
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={6}>
           <Typography variant="h4" align="left" color="deepskyblue">
             All Data
           </Typography>
@@ -331,6 +277,53 @@ const handleCreateUser = (e) => {
             onChange={handleSearchChange}
             InputProps={{ style: { height: "56px" } }}
           />
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <Button
+            variant="outlined"
+            onClick={() => handleClickOpen()}
+            style={{ height: "56px" }}
+            size="large"
+            fullWidth
+            color="info"
+          >
+            Add Task
+          </Button>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>{isEditing ? "Edit Task" : "Add Task"}</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="task-name"
+                label="Task Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={name}
+                onChange={(e) => setTaskname(e.target.value)}
+              />
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="task-describe"
+                label="Description"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={describe}
+                onChange={(e) => setDescribe(e.target.value)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button type="submit" onClick={handleSubmit}>
+                {isEditing ? "Update" : "Add"}
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
         <Grid item xs={12} md={2}>
           <Button
@@ -362,9 +355,7 @@ const handleCreateUser = (e) => {
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
+                paginationModel: { pageSize: 5 },
               },
             }}
             pageSizeOptions={[5]}
@@ -372,13 +363,6 @@ const handleCreateUser = (e) => {
           />
         </Box>
       )}
-      <Fab
-        color="primary"
-        aria-label="add"
-        onClick={() => navigate(`/adduser`)}
-      >
-        <AddIcon />
-      </Fab>
       <ToastContainer />
     </Container>
   );
