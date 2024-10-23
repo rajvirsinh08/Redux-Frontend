@@ -7,16 +7,26 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import axiosInstance from "./axiosInstance";
 import { Audio } from "react-loader-spinner";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Box } from "@mui/system";
 import { Button, Typography, Container, Grid, TextField } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import debounce from "lodash.debounce";
-import axios from "axios";
+// import debounce from "lodash.debounce";
+// import axios from "axios";
 
+interface Task{
+  id:string;
+  name:string;
+  describe:string;
+}
+interface ApiResponseItem {
+  _id: string;
+  name: string;
+  describe: string;
+}
 const Users = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
@@ -31,10 +41,11 @@ const Users = () => {
   const user = useSelector(selectUser);
   const [open, setOpen] = useState(false);
 
-  const [editingTask, setEditingTask] = useState(null);
+  // const [editingTask, setEditingTask] = useState(null);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleClickOpen = (task = null) => {
+  const handleClickOpen = (task:Task|null = null) => {
     setEditingTask(task);
     setIsEditing(!!task);
     setTaskname(task ? task.name : "");
@@ -49,7 +60,8 @@ const Users = () => {
     setEditingTask(null);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:React.FormEvent) => {
+    debugger;
     e.preventDefault();
     const taskData = { name, describe };
 
@@ -57,7 +69,7 @@ const Users = () => {
     try {
       if (isEditing) {
         await axiosInstance.patch(
-          `/task/updatetask/${editingTask.id}`,
+          `/task/updatetask/${editingTask?.id}`,
           taskData,
           {
             headers: {
@@ -66,6 +78,7 @@ const Users = () => {
             },
           }
         );
+        
         toast.success("Task updated successfully");
       } else {
         await axiosInstance.post(`/task/addtask`, taskData, {
@@ -86,14 +99,14 @@ const Users = () => {
     }
   };
 
-  const columns = [
+  const columns: GridColDef[] = [
     { field: "name", headerName: "Task Name", width: 225 },
     { field: "describe", headerName: "Description", width: 225 },
     {
       field: "actions",
       headerName: "Actions",
       width: 200,
-      renderCell: (params) => (
+      renderCell: (params: GridRenderCellParams) => (
         <div>
           <Button
             variant="contained"
@@ -117,7 +130,38 @@ const Users = () => {
     },
   ];
 
-  const handleDeleteAlert = (id) => {
+  // const columns = [
+  //   { field: "name", headerName: "Task Name", width: 225 },
+  //   { field: "describe", headerName: "Description", width: 225 },
+  //   {
+  //     field: "actions",
+  //     headerName: "Actions",
+  //     width: 200,
+  //     renderCell: (params) => (
+  //       <div>
+  //         <Button
+  //           variant="contained"
+  //           color="primary"
+  //           size="small"
+  //           style={{ marginRight: 16 }}
+  //           onClick={() => handleClickOpen(params.row)}
+  //         >
+  //           Edit
+  //         </Button>
+  //         <Button
+  //           variant="contained"
+  //           color="error"
+  //           size="small"
+  //           onClick={() => handleDeleteAlert(params.row.id)}
+  //         >
+  //           Delete
+  //         </Button>
+  //       </div>
+  //     ),
+  //   },
+  // ];
+
+  const handleDeleteAlert = (id:string) => {
     confirmAlert({
       title: "Confirm to Delete",
       message: "Are you sure you want to delete this data?",
@@ -138,7 +182,7 @@ const Users = () => {
                 setError("");
                 getData();
               }, 1000);
-            } catch (error) {
+            } catch (error:any) {
               setError(error.message);
             } finally {
               setLoading(false);
@@ -150,7 +194,7 @@ const Users = () => {
     });
   };
 
-  const handleCreateUser = async (e) => {
+  const handleCreateUser = async (e:React.FormEvent) => {
     e.preventDefault();
     confirmAlert({
       title: "Confirm to logout",
@@ -172,7 +216,7 @@ const Users = () => {
               );
               dispatch(logout());
               navigate("/signin", { replace: true });
-            } catch (error) {
+            } catch (error:any) {
               setError(error.message);
             }
           },
@@ -196,67 +240,68 @@ const Users = () => {
         },
       });
       const formattedData = response.data
-        .map((item) => ({
+        .map((item:ApiResponseItem) => ({
           id: item._id,
           name: item.name,
           describe: item.describe,
         }))
         .reverse();
       setData(formattedData);
-    } catch (error) {
+    } catch (error:any) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const searchUsers = async (query) => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `http://localhost:5001/api/users/search?query=${query}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-        }
-      );
-      const formattedData = response.data.map((item) => ({
-        id: item._id,
-        Name: item.Name,
-        describe: item.describe,
-      }));
-      setData(formattedData);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const searchUsers = async (query:string) => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await axios.get(
+  //       `http://localhost:5001/api/users/search?query=${query}`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${user.accessToken}`,
+  //         },
+  //       }
+  //     );
+  //     const formattedData = response.data.map((item) => ({
+  //       id: item._id,
+  //       Name: item.Name,
+  //       describe: item.describe,
+  //     }));
+  //     setData(formattedData);
+  //   } catch (error:any) {
+  //     setError(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const debouncedSearch = useCallback(
-    debounce((query) => {
-      if (query) {
-        searchUsers(query);
-      } else {
-        getData();
-      }
-    }, 500),
-    []
-  );
+  // const debouncedSearch = useCallback(
+  //   debounce((query:string) => {
+  //     if (query) {
+  //       searchUsers(query);
+  //     } else {
+  //       getData();
+  //     }
+  //   }, 500),
+  //   []
+  // );
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    debouncedSearch(value);
-  };
+  // const handleSearchChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value;
+  //   setSearchTerm(value);
+  //   debouncedSearch(value);
+  // };
 
   return (
     <Container maxWidth="lg" className="container my-2 text-center">
       {error && <div className="alert alert-danger">{error}</div>}
 
       <Grid
+      role="dashboard"
         container
         spacing={3}
         alignItems="center"
@@ -274,8 +319,9 @@ const Users = () => {
             variant="outlined"
             fullWidth
             value={searchTerm}
-            onChange={handleSearchChange}
+            // onChange={handleSearchChange}
             InputProps={{ style: { height: "56px" } }}
+            aria-label="search task"
           />
         </Grid>
         <Grid item xs={12} md={2}>
@@ -286,6 +332,7 @@ const Users = () => {
             size="large"
             fullWidth
             color="info"
+            aria-label="add new task"
           >
             Add Task
           </Button>
@@ -303,6 +350,7 @@ const Users = () => {
                 variant="standard"
                 value={name}
                 onChange={(e) => setTaskname(e.target.value)}
+                aria-required="true"
               />
               <TextField
                 autoFocus
@@ -315,16 +363,29 @@ const Users = () => {
                 variant="standard"
                 value={describe}
                 onChange={(e) => setDescribe(e.target.value)}
+                aria-required="true"
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose}>Cancel</Button>
-              <Button type="submit" onClick={handleSubmit}>
+              <Button onClick={handleClose} aria-label="Cancel">Cancel</Button>
+              <Button type="submit" onClick={handleSubmit} aria-label={isEditing ? "Update task" : "Add task"}>
                 {isEditing ? "Update" : "Add"}
               </Button>
             </DialogActions>
           </Dialog>
         </Grid>
+        {/* <Grid item xs={12} md={2}>
+          <Button
+            variant="outlined"
+            color="info"
+            size="large"
+            fullWidth
+            style={{ height: "56px" }}
+            onClick={handleSubscribe}
+          >
+            Subscribe
+          </Button>
+        </Grid> */}
         <Grid item xs={12} md={2}>
           <Button
             variant="outlined"
@@ -333,6 +394,7 @@ const Users = () => {
             fullWidth
             style={{ height: "56px" }}
             onClick={handleCreateUser}
+            aria-label="Logout"
           >
             Logout
           </Button>

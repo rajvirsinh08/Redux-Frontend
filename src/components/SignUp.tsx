@@ -1,12 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, FormEvent, ChangeEvent } from "react";
 import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
-import { Avatar, Button, TextField, Grid, Typography, CircularProgress } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  TextField,
+  Grid,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectUser } from "../features/userSlice";
+import { login, selectUser } from "features/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import axiosInstance from "./axiosInstance";
+// import axiosInstance from "axiosInstance";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -14,6 +21,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { createRoot } from "react-dom/client";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
+import axiosInstance from "./axiosInstance";
+import 'App.css';
 // const API_KEY = globalThis.GOOGLE_MAPS_API_KEY ?? "AIzaSyC_KSN9eaRLTgKh16aZ5EAUEgRif-sUERQ";
 const API_KEY = "AIzaSyC_KSN9eaRLTgKh16aZ5EAUEgRif-sUERQ";
 const useStyles = makeStyles((theme) => ({
@@ -50,14 +59,14 @@ function SignUp() {
     // }
   }, [accessToken, navigate]);
 
-  const onChangeName = (e) => {
+  const onChangeName = (e:React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     setNameError("");
     if (!/^[a-zA-Z]+$/.test(e.target.value)) {
       setNameError("Please Enter Valid Name");
     }
   };
-  const onChangeContactno = (e) => {
+  const onChangeContactno = (e:React.ChangeEvent<HTMLInputElement>) => {
     setContact(e.target.value);
     setContactnoError("");
     if (
@@ -68,14 +77,14 @@ function SignUp() {
       setContactnoError("Please Enter Valid Contact No");
     }
   };
-  const onChangeCity = (e) => {
+  const onChangeCity = (e:React.ChangeEvent<HTMLInputElement>) => {
     setCity(e.target.value);
     setCityError("");
     if (!/^[a-zA-Z]+$/.test(e.target.value)) {
       setCityError("Please Enter Valid City");
     }
   };
-  const onChangeEmail = (e) => {
+  const onChangeEmail = (e:React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     setEmailError("");
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(e.target.value)) {
@@ -83,51 +92,51 @@ function SignUp() {
     }
   };
 
-  const onChangePassword = (e) => {
+  const onChangePassword = (e:React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     setPasswordError("");
     if (e.target.value.length < 6) {
       setPasswordError("Password must be 6 characters");
     }
   };
-  const onChangeDob = (newValue) => {
-    setDob(newValue);
-  };
+  // const onChangeDob = (newValue) => {
+  //   setDob(newValue);
+  // };
   // const onChangeDob = (e) => {
   //   setDob(e.target.value);
 
   // };
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: API_KEY,
-    libraries,
-  });
-  const autocompleteRef = useRef(null);
+  // const { isLoaded, loadError } = useLoadScript({
+  //   googleMapsApiKey: API_KEY,
+  //   libraries,
+  // });
+  // const autocompleteRef = useRef(null);
 
-  const onLoad = (autocomplete) => {
-    autocompleteRef.current = autocomplete;
-  };
+  // const onLoad = (autocomplete) => {
+  //   autocompleteRef.current = autocomplete;
+  // };
 
-  const onPlaceChanged = () => {
-    if (autocompleteRef.current !== null) {
-      const place = autocompleteRef.current.getPlace();
-      if (place.address_components) {
-        const cityComponent = place.address_components.find((component) =>
-          component.types.includes("locality")
-        );
-        if (cityComponent) {
-          setCity(cityComponent.long_name);
-          setCityError("");
-        } else {
-          setCity("");
-          setCityError("Please select a valid city");
-        }
-      }
-    }
-  };
+  // const onPlaceChanged = () => {
+  //   if (autocompleteRef.current !== null) {
+  //     const place = autocompleteRef.current.getPlace();
+  //     if (place.address_components) {
+  //       const cityComponent = place.address_components.find((component) =>
+  //         component.types.includes("locality")
+  //       );
+  //       if (cityComponent) {
+  //         setCity(cityComponent.long_name);
+  //         setCityError("");
+  //       } else {
+  //         setCity("");
+  //         setCityError("Please select a valid city");
+  //       }
+  //     }
+  //   }
+  // };
 
   const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
     debugger;
     e.preventDefault();
     let isError = false;
@@ -178,13 +187,11 @@ function SignUp() {
       };
       setLoading(true);
 
-
       try {
         const response = await axiosInstance.post(`/users/nm`, addUser1, {
           headers: {
             // 'Content-Type': 'multipart/form-data'
-            "Content-Type": "application/json", 
-            
+            "Content-Type": "application/json",
           },
         });
 
@@ -208,7 +215,6 @@ function SignUp() {
           toast.success("Sign up successful");
           navigate("/signin", { replace: true });
           setLoading(false);
-
         } else {
           const errorData = response.data;
           if (errorData.message === "Email already in use") {
@@ -219,13 +225,11 @@ function SignUp() {
             );
           }
           setLoading(false);
-
         }
       } catch (error) {
         console.error("Error submitting form:", error);
         toast.error("Failed to sign up. Please try again.");
         setLoading(false);
-
       }
     }
   };
@@ -235,10 +239,11 @@ function SignUp() {
       container
       justifyContent="center"
       alignItems="center"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "100vh", fontFamily: 'Arima'}}
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <div
+        role="form"
           style={{
             padding: "20px",
             border: "1px solid #ddd",
@@ -252,8 +257,9 @@ function SignUp() {
                 <PersonAddAltTwoToneIcon />
               </Avatar>
               <Typography
+              aria-label="signup title"
                 variant="h4"
-                style={{ color: "blue", marginBottom: "20px" }}
+                style={{ color: "blue", marginBottom: "20px",fontFamily: 'Arima' }}
               >
                 Sign Up
               </Typography>
@@ -273,6 +279,8 @@ function SignUp() {
                   error={!!nameError}
                   helperText={nameError}
                   FormHelperTextProps={{ className: classes.helperText }}
+                  aria-describedby="name helper text"
+                  style={{fontFamily: 'Arima'}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -289,6 +297,8 @@ function SignUp() {
                   error={!!emailError}
                   helperText={emailError}
                   FormHelperTextProps={{ className: classes.helperText }}
+                   aria-describedby="email helper text"
+                   style={{fontFamily: 'Arima'}}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -305,6 +315,8 @@ function SignUp() {
                   error={!!contactnoError}
                   helperText={contactnoError}
                   FormHelperTextProps={{ className: classes.helperText }}
+                   aria-describedby="contact helper text"
+                   style={{fontFamily: 'Arima'}}
                 />
               </Grid>
               <Grid item xs={12} sx={{ marginTop: "-10px" }}>
@@ -314,16 +326,17 @@ function SignUp() {
                       label="Date of Birth"
                       sx={{ width: "100% " }}
                       value={dob}
-                      onChange={onChangeDob}
+                      // onChange={onChangeDob}
                       minDate={dayjs("1900-01-01")}
                       maxDate={dayjs("2006-01-01")}
                       views={["day", "month", "year"]}
+                       aria-describedby="dob helper text"
                       // slotProps={{ textField: { fullWidth: true } }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 {isLoaded ? (
                   <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
                     <TextField
@@ -355,9 +368,9 @@ function SignUp() {
                     fullWidth
                     disabled
                   />
-                )}
-              </Grid>
-              {/* <Grid item xs={12}>
+                )} */}
+              {/* </Grid> */}
+              <Grid item xs={12}>
                 <TextField
                   type="text"
                   id="city"
@@ -371,8 +384,10 @@ function SignUp() {
                   error={!!cityError}
                   helperText={cityError}
                   FormHelperTextProps={{ className: classes.helperText }}
+                   aria-describedby="city helper text"
+                   style={{fontFamily: 'Arima'}}
                 />
-              </Grid> */}
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   type="password"
@@ -387,6 +402,7 @@ function SignUp() {
                   error={!!passwordError}
                   helperText={passwordError}
                   FormHelperTextProps={{ className: classes.helperText }}
+                   aria-describedby="password helper text"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -397,14 +413,15 @@ function SignUp() {
                   fullWidth
                   style={{ marginTop: "10px", marginBottom: "15px" }}
                   disabled={loading}
+                  aria-controls="submit new user"
                 >
-                   {loading ? <CircularProgress size={24} /> : "Submit"}
+                  {loading ? <CircularProgress size={24} /> : "Submit"}
                 </Button>
               </Grid>
             </Grid>
-            <Typography variant="body2" align="center">
+            <Typography variant="body2" align="center" style={{fontFamily: 'Arima'}}>
               Already have an account?{" "}
-              <Link to="/signin" replace="true">
+              <Link to="/signin" style={{fontFamily: 'Arima'}}>
                 Sign In
               </Link>
             </Typography>

@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Arima';
+    src: url('./fonts/Arima-VariableFont_wght.ttf') format('truetype'); /* Adjust the path if necessary */
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* Use the custom font */
+  body {
+    font-family: 'Arima', sans-serif; /* Fallback to sans-serif */
+  }
+  

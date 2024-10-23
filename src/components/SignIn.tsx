@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
 import {
   Avatar,
@@ -18,7 +18,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { login, selectUser } from "../features/userSlice";
+import { login, selectUser } from "features/userSlice";
 import axiosInstance from "./axiosInstance";
 const useStyles = makeStyles((theme) => ({
   helperText: {
@@ -40,7 +40,7 @@ function SignIn() {
 
   const classes = useStyles();
 
-  const onChangeEmail = (e) => {
+  const onChangeEmail = (e:React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(e.target.value)) {
       setEmailError("Please Enter Valid Email");
@@ -49,7 +49,7 @@ function SignIn() {
     }
   };
 
-  const onChangePassword = (e) => {
+  const onChangePassword = (e:React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     if (e.target.value.length < 6) {
       setPasswordError("Password must be 6 characters");
@@ -62,11 +62,11 @@ function SignIn() {
     setShowPassword(!showPassword);
   };
 
-  const handleMouseDownPassword = (event) => {
+  const handleMouseDownPassword = (event:React.MouseEvent) => {
     event.preventDefault();
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let isError = false;
 
@@ -126,6 +126,7 @@ function SignIn() {
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <div
+        role="form"
           style={{
             padding: "20px",
             border: "1px solid #ddd",
@@ -135,7 +136,8 @@ function SignIn() {
         >
           <form onSubmit={handleSubmit}>
             <Grid container direction="column" alignItems="center">
-              <Avatar style={{ backgroundColor: "grey", margin: "20px" }}>
+              <Avatar style={{ backgroundColor: "grey", margin: "20px" }}
+              aria-label="user avatar">
                 <PersonAddAltTwoToneIcon />
               </Avatar>
               <Typography
@@ -160,6 +162,7 @@ function SignIn() {
                   error={!!emailError}
                   helperText={emailError}
                   FormHelperTextProps={{ className: classes.helperText }}
+                  aria-describedby="email helper text"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -176,6 +179,7 @@ function SignIn() {
                   error={!!passwordError}
                   helperText={passwordError}
                   FormHelperTextProps={{ className: classes.helperText }}
+                  aria-describedby="password visibility"
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -212,7 +216,7 @@ function SignIn() {
             </Grid>
             <Typography variant="body2" align="center">
               Don't have an account?{" "}
-              <Link to="/" replace="true">
+              <Link to="/" aria-label="Sign Up">
                 Sign Up
               </Link>
             </Typography>

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "jsx": "react", // or "react-jsx" for React 17+
+      "strict": true,
+      "esModuleInterop": true,
+      "target": "es6",
+      "module": "commonjs",
+      "baseUrl": "./src"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+  }
+  
