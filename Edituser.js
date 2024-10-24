@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { selectUser } from "../features/userSlice";
 import { useSelector } from "react-redux";
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "./src/components/axiosInstance";
 import { makeStyles } from "@mui/styles";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";

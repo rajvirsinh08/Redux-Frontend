@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectUser } from "features/userSlice";
+import { login, selectUser } from "store/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 // import axiosInstance from "axiosInstance";
@@ -21,8 +21,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { createRoot } from "react-dom/client";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
-import axiosInstance from "./axiosInstance";
+// import axiosInstance from "./axiosInstance";
 import 'App.css';
+import axiosInstance from "components/axiosInstance";
 // const API_KEY = globalThis.GOOGLE_MAPS_API_KEY ?? "AIzaSyC_KSN9eaRLTgKh16aZ5EAUEgRif-sUERQ";
 const API_KEY = "AIzaSyC_KSN9eaRLTgKh16aZ5EAUEgRif-sUERQ";
 const useStyles = makeStyles((theme) => ({

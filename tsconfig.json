@@ -7,7 +7,7 @@
       "module": "commonjs",
       "baseUrl": "./src"
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "Addusersfromfab.js", "Edituser.js", "Login1.js", "Logout1.js"],
     "exclude": ["node_modules"]
   }
   

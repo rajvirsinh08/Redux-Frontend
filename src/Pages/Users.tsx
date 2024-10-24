@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { logout, selectUser } from "../features/userSlice";
+import { logout, selectUser } from "../store/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "../components/axiosInstance";
 import { Audio } from "react-loader-spinner";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Box } from "@mui/system";

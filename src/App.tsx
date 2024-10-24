@@ -1,16 +1,17 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { selectUser } from 'features/userSlice';
+import { selectUser } from 'store/userSlice';
 import PrivateRoute from 'components/PrivateRoute';
-import Users from 'components/Users';
+import Users from 'Pages/Users';
 // import Edituser from 'components/Edituser';
-import SignIn from 'components/SignIn';
+import SignIn from 'Pages/SignIn';
 // import SignUp from './components/SignUp';
-import Not_found from 'components/Not_found';
+import Not_found from 'Pages/Not_found';
 import 'App.css';
+import SignUp from 'Pages/SignUp';
 // import Addusersfromfab from 'components/Addusersfromfab';
-import SignUp from 'components/SignUp';
+// import SignUp from 'components/SignUp';
 
 function App() {
   const user = useSelector(selectUser);

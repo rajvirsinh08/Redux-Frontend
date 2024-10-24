@@ -18,8 +18,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { login, selectUser } from "features/userSlice";
-import axiosInstance from "./axiosInstance";
+import { login, selectUser } from "store/userSlice";
+import axiosInstance from "../components/axiosInstance";
 const useStyles = makeStyles((theme) => ({
   helperText: {
     position: "relative",

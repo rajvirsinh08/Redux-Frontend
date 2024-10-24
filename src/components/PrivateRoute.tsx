@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Correct import statement
-import { selectUser } from 'features/userSlice';
+import { selectUser } from 'store/userSlice';
 
 // const PrivateRoute = ({ children }) => {
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({children,}) => {
