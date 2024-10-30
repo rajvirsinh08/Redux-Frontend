@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface User{
-  email:string;
+interface User {
+  email: string;
 }
-interface UserState{
-  user:User|null;
-  accessToken:string|null;
+interface UserState {
+  user: User | null;
+  accessToken: string | null;
 }
 const initialState: UserState = {
   user: null,
@@ -31,6 +31,6 @@ export type RootState = {
 
 export const { login, logout } = userSlice.actions;
 
-export const selectUser = (state:RootState) => state.user;
-export const selectUserEmail = (state:RootState) => state.user.user?.email;
+export const selectUser = (state: RootState) => state.user;
+export const selectUserEmail = (state: RootState) => state.user.user?.email;
 export default userSlice.reducer;

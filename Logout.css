@@ -1,14 +1,12 @@
-
-.logout{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    font-family: "Inter"
+.logout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: 'Inter';
 }
 
-
-.user_name{
-    color: #8d0ada;
+.user_name {
+  color: #8d0ada;
 }

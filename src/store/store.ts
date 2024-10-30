@@ -1,14 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "store/userSlice";
-import { persistReducer } from "redux-persist";
-import { combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage";
-import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-// import persistReducer from "redux-persist/es/persistReducer";
+import { configureStore } from '@reduxjs/toolkit';
+import userReducer from 'store/userSlice';
+import { persistReducer } from 'redux-persist';
+import { combineReducers } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+
 const persistConfig = {
-  key: "root",
+  key: 'root',
   version: 1,
   storage,
 };

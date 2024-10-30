@@ -1,26 +1,24 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import { logout, selectUser } from "../store/userSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
-import axiosInstance from "../components/axiosInstance";
-import { Audio } from "react-loader-spinner";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { Box } from "@mui/system";
-import { Button, Typography, Container, Grid, TextField } from "@mui/material";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-// import debounce from "lodash.debounce";
-// import axios from "axios";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import { logout, selectUser } from '../store/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import axiosInstance from '../components/axiosInstance';
+import { Audio } from 'react-loader-spinner';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { Box } from '@mui/system';
+import { Button, Typography, Container, Grid, TextField } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
-interface Task{
-  id:string;
-  name:string;
-  describe:string;
+interface Task {
+  id: string;
+  name: string;
+  describe: string;
 }
 interface ApiResponseItem {
   _id: string;
@@ -29,12 +27,12 @@ interface ApiResponseItem {
 }
 const Users = () => {
   const [data, setData] = useState([]);
-  const [error, setError] = useState("");
-  const [name, setTaskname] = useState("");
-  const [describe, setDescribe] = useState("");
+  const [error, setError] = useState('');
+  const [name, setTaskname] = useState('');
+  const [describe, setDescribe] = useState('');
 
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [searching, setSearching] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -45,22 +43,22 @@ const Users = () => {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleClickOpen = (task:Task|null = null) => {
+  const handleClickOpen = (task: Task | null = null) => {
     setEditingTask(task);
     setIsEditing(!!task);
-    setTaskname(task ? task.name : "");
-    setDescribe(task ? task.describe : "");
+    setTaskname(task ? task.name : '');
+    setDescribe(task ? task.describe : '');
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setTaskname("");
-    setDescribe("");
+    setTaskname('');
+    setDescribe('');
     setEditingTask(null);
   };
 
-  const handleSubmit = async (e:React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     debugger;
     e.preventDefault();
     const taskData = { name, describe };
@@ -73,38 +71,38 @@ const Users = () => {
           taskData,
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${user.accessToken}`,
             },
           }
         );
-        
-        toast.success("Task updated successfully");
+
+        toast.success('Task updated successfully');
       } else {
         await axiosInstance.post(`/task/addtask`, taskData, {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${user.accessToken}`,
           },
         });
-        toast.success("Task added successfully");
+        toast.success('Task added successfully');
       }
 
       handleClose();
       getData();
     } catch (error) {
-      toast.error("Failed to save task. Please try again.");
+      toast.error('Failed to save task. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const columns: GridColDef[] = [
-    { field: "name", headerName: "Task Name", width: 225 },
-    { field: "describe", headerName: "Description", width: 225 },
+    { field: 'name', headerName: 'Task Name', width: 225 },
+    { field: 'describe', headerName: 'Description', width: 225 },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       width: 200,
       renderCell: (params: GridRenderCellParams) => (
         <div>
@@ -161,47 +159,47 @@ const Users = () => {
   //   },
   // ];
 
-  const handleDeleteAlert = (id:string) => {
+  const handleDeleteAlert = (id: string) => {
     confirmAlert({
-      title: "Confirm to Delete",
-      message: "Are you sure you want to delete this data?",
+      title: 'Confirm to Delete',
+      message: 'Are you sure you want to delete this data?',
       buttons: [
         {
-          label: "Yes",
+          label: 'Yes',
           onClick: async () => {
             try {
               setLoading(true);
               await axiosInstance.delete(`/task/deletetask/${id}`, {
                 headers: {
-                  "Content-Type": "application/json",
+                  'Content-Type': 'application/json',
                   Authorization: `Bearer ${user.accessToken}`,
                 },
               });
-              setError("Deleted successfully");
+              setError('Deleted successfully');
               setTimeout(() => {
-                setError("");
+                setError('');
                 getData();
               }, 1000);
-            } catch (error:any) {
+            } catch (error: any) {
               setError(error.message);
             } finally {
               setLoading(false);
             }
           },
         },
-        { label: "No" },
+        { label: 'No' },
       ],
     });
   };
 
-  const handleCreateUser = async (e:React.FormEvent) => {
+  const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     confirmAlert({
-      title: "Confirm to logout",
-      message: "Are you sure you want to logout?",
+      title: 'Confirm to logout',
+      message: 'Are you sure you want to logout?',
       buttons: [
         {
-          label: "Yes",
+          label: 'Yes',
           onClick: async () => {
             try {
               await axiosInstance.post(
@@ -209,19 +207,19 @@ const Users = () => {
                 {},
                 {
                   headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${user.accessToken}`,
                   },
                 }
               );
               dispatch(logout());
-              navigate("/signin", { replace: true });
-            } catch (error:any) {
+              navigate('/signin', { replace: true });
+            } catch (error: any) {
               setError(error.message);
             }
           },
         },
-        { label: "No" },
+        { label: 'No' },
       ],
     });
   };
@@ -235,19 +233,19 @@ const Users = () => {
       setLoading(true);
       const response = await axiosInstance.get(`/task/alltask`, {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${user.accessToken}`,
         },
       });
       const formattedData = response.data
-        .map((item:ApiResponseItem) => ({
+        .map((item: ApiResponseItem) => ({
           id: item._id,
           name: item.name,
           describe: item.describe,
         }))
         .reverse();
       setData(formattedData);
-    } catch (error:any) {
+    } catch (error: any) {
       setError(error.message);
     } finally {
       setLoading(false);
@@ -301,12 +299,12 @@ const Users = () => {
       {error && <div className="alert alert-danger">{error}</div>}
 
       <Grid
-      role="dashboard"
+        role="dashboard"
         container
         spacing={3}
         alignItems="center"
         justifyContent="space-between"
-        style={{ marginBottom: "30px", marginTop: "10px" }}
+        style={{ marginBottom: '30px', marginTop: '10px' }}
       >
         <Grid item xs={12} md={6}>
           <Typography variant="h4" align="left" color="deepskyblue">
@@ -320,7 +318,7 @@ const Users = () => {
             fullWidth
             value={searchTerm}
             // onChange={handleSearchChange}
-            InputProps={{ style: { height: "56px" } }}
+            InputProps={{ style: { height: '56px' } }}
             aria-label="search task"
           />
         </Grid>
@@ -328,7 +326,7 @@ const Users = () => {
           <Button
             variant="outlined"
             onClick={() => handleClickOpen()}
-            style={{ height: "56px" }}
+            style={{ height: '56px' }}
             size="large"
             fullWidth
             color="info"
@@ -337,7 +335,7 @@ const Users = () => {
             Add Task
           </Button>
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{isEditing ? "Edit Task" : "Add Task"}</DialogTitle>
+            <DialogTitle>{isEditing ? 'Edit Task' : 'Add Task'}</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
@@ -367,9 +365,15 @@ const Users = () => {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleClose} aria-label="Cancel">Cancel</Button>
-              <Button type="submit" onClick={handleSubmit} aria-label={isEditing ? "Update task" : "Add task"}>
-                {isEditing ? "Update" : "Add"}
+              <Button onClick={handleClose} aria-label="Cancel">
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                aria-label={isEditing ? 'Update task' : 'Add task'}
+              >
+                {isEditing ? 'Update' : 'Add'}
               </Button>
             </DialogActions>
           </Dialog>
@@ -392,7 +396,7 @@ const Users = () => {
             color="info"
             size="large"
             fullWidth
-            style={{ height: "56px" }}
+            style={{ height: '56px' }}
             onClick={handleCreateUser}
             aria-label="Logout"
           >
@@ -411,7 +415,7 @@ const Users = () => {
           <Audio height="100" width="100" color="blue" ariaLabel="loading" />
         </Box>
       ) : (
-        <Box sx={{ height: 400, width: "100%" }}>
+        <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
             rows={data}
             columns={columns}

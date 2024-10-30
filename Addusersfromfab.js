@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from "react";
-import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
-import { Avatar, Button, TextField, Grid, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { login, selectUser } from "../features/userSlice";
-import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import axiosInstance from "./src/components/axiosInstance";
-import { makeStyles } from "@mui/styles";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
+import React, { useEffect, useState } from 'react';
+import PersonAddAltTwoToneIcon from '@mui/icons-material/PersonAddAltTwoTone';
+import { Avatar, Button, TextField, Grid, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, selectUser } from '../features/userSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import axiosInstance from './src/components/axiosInstance';
+import { makeStyles } from '@mui/styles';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 const useStyles = makeStyles((theme) => ({
   helperText: {
-    position: "relative",
-    left: "-8px", // Adjust this value to move the helper text
+    position: 'relative',
+    left: '-8px', // Adjust this value to move the helper text
   },
 }));
 function Addusersfromfab() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [contact, setContact] = useState("");
-  const [contactnoError, setContactnoError] = useState("");
-  const [city, setCity] = useState("");
-  const [cityError, setCityError] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [contact, setContact] = useState('');
+  const [contactnoError, setContactnoError] = useState('');
+  const [city, setCity] = useState('');
+  const [cityError, setCityError] = useState('');
   const [dob, setDob] = useState(dayjs());
 
   const navigate = useNavigate();
@@ -40,41 +40,41 @@ function Addusersfromfab() {
 
   const onChangeName = (e) => {
     setName(e.target.value);
-    setNameError("");
+    setNameError('');
     if (!/^[a-zA-Z]+$/.test(e.target.value)) {
-      setNameError("Please Enter Valid Name");
+      setNameError('Please Enter Valid Name');
     }
   };
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
-    setEmailError("");
+    setEmailError('');
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(e.target.value)) {
-      setEmailError("Please Enter Valid Email");
+      setEmailError('Please Enter Valid Email');
     }
   };
   const onChangeContactno = (e) => {
     setContact(e.target.value);
-    setContactnoError("");
+    setContactnoError('');
     if (
       /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/.test(e.target.value)
     ) {
-      setContactnoError("");
+      setContactnoError('');
     } else {
-      setContactnoError("Please Enter Valid Contact No");
+      setContactnoError('Please Enter Valid Contact No');
     }
   };
   const onChangeCity = (e) => {
     setCity(e.target.value);
-    setCityError("");
+    setCityError('');
     if (!/^[a-zA-Z]+$/.test(e.target.value)) {
-      setCityError("Please Enter Valid City");
+      setCityError('Please Enter Valid City');
     }
   };
   const onChangePassword = (e) => {
     setPassword(e.target.value);
-    setPasswordError("");
+    setPasswordError('');
     if (e.target.value.length < 6) {
-      setPasswordError("Password must be 6 characters");
+      setPasswordError('Password must be 6 characters');
     }
   };
   const onChangeDob = (newValue) => {
@@ -85,72 +85,79 @@ function Addusersfromfab() {
     e.preventDefault();
     let isError = false;
     if (!email) {
-      setEmailError("Please Enter Email Address");
+      setEmailError('Please Enter Email Address');
       isError = true;
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-      setEmailError("Please Enter Valid Email");
+      setEmailError('Please Enter Valid Email');
       isError = true;
     }
     if (!name) {
-      setNameError("Please Enter Name");
+      setNameError('Please Enter Name');
       isError = true;
     } else if (!/^[a-zA-Z]+$/.test(name)) {
-      setNameError("Please Enter Valid Name");
+      setNameError('Please Enter Valid Name');
       isError = true;
     }
     if (!password) {
-      setPasswordError("Please Enter Password");
+      setPasswordError('Please Enter Password');
       isError = true;
     } else if (password.length < 6) {
-      setPasswordError("Password must be 6 characters");
+      setPasswordError('Password must be 6 characters');
       isError = true;
     }
     if (!city) {
-      setCityError("Please Enter City");
+      setCityError('Please Enter City');
       isError = true;
     }
     if (!contact) {
-      setContactnoError("Please Enter Contact No");
+      setContactnoError('Please Enter Contact No');
       isError = true;
     }
 
     if (!isError) {
-      const formattedDob = dob ? dob.format("YYYY-MM-DD") : "";
-      const addUser2 = { name, email, contact, dob: formattedDob, city, password };
+      const formattedDob = dob ? dob.format('YYYY-MM-DD') : '';
+      const addUser2 = {
+        name,
+        email,
+        contact,
+        dob: formattedDob,
+        city,
+        password,
+      };
 
       try {
         const response = await axiosInstance.post(`/nm`, addUser2, {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
 
         if (response.status === 201) {
           const result = response.data;
-          setName("");
-          setEmail("");
-          setCity("");
+          setName('');
+          setEmail('');
+          setCity('');
           setDob(dayjs());
-          setContact("");
-          setPassword("");
+          setContact('');
+          setPassword('');
           // Only update the Redux state if the user is adding another user
           // const user = { name, email };
           // dispatch(login({ user }));
-          toast.success("User added successfully");
-          navigate("/users", { replace: true });
+          toast.success('User added successfully');
+          navigate('/users', { replace: true });
         } else {
           const errorData = response.data;
-          if (errorData.message === "Email already in use") {
+          if (errorData.message === 'Email already in use') {
             setEmailError(errorData.message);
           } else {
             toast.error(
-              errorData.message || "Failed to add user. Please try again."
+              errorData.message || 'Failed to add user. Please try again.'
             );
           }
         }
       } catch (error) {
-        console.error("Error submitting form:", error);
-        toast.error("Failed to add user. Please try again.");
+        console.error('Error submitting form:', error);
+        toast.error('Failed to add user. Please try again.');
       }
     }
   };
@@ -160,25 +167,25 @@ function Addusersfromfab() {
       container
       justifyContent="center"
       alignItems="center"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: '100vh' }}
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <div
           style={{
-            padding: "20px",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            padding: '20px',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           }}
         >
           <form onSubmit={handleSubmit}>
             <Grid container direction="column" alignItems="center">
-              <Avatar style={{ backgroundColor: "grey", margin: "20px" }}>
+              <Avatar style={{ backgroundColor: 'grey', margin: '20px' }}>
                 <PersonAddAltTwoToneIcon />
               </Avatar>
               <Typography
                 variant="h4"
-                style={{ color: "blue", marginBottom: "20px" }}
+                style={{ color: 'blue', marginBottom: '20px' }}
               >
                 Add User
               </Typography>
@@ -232,12 +239,12 @@ function Addusersfromfab() {
                   FormHelperTextProps={{ className: classes.helperText }}
                 />
               </Grid>
-              <Grid item xs={12} sx={{ marginTop: "-10px" }}>
+              <Grid item xs={12} sx={{ marginTop: '-10px' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
+                  <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       label="Date of Birth"
-                      sx={{ width: "100% " }}
+                      sx={{ width: '100% ' }}
                       value={dob}
                       onChange={onChangeDob}
 
@@ -284,7 +291,7 @@ function Addusersfromfab() {
                   color="primary"
                   variant="contained"
                   fullWidth
-                  style={{ marginTop: "10px", marginBottom: "15px" }}
+                  style={{ marginTop: '10px', marginBottom: '15px' }}
                 >
                   Submit
                 </Button>

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import PersonAddAltTwoToneIcon from "@mui/icons-material/PersonAddAltTwoTone";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import PersonAddAltTwoToneIcon from '@mui/icons-material/PersonAddAltTwoTone';
 import {
   Avatar,
   TextField,
@@ -10,34 +10,34 @@ import {
   Grid,
   Alert,
   Typography,
-} from "@mui/material";
-import { selectUser } from "../features/userSlice";
-import { useSelector } from "react-redux";
-import axiosInstance from "./src/components/axiosInstance";
-import { makeStyles } from "@mui/styles";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
+} from '@mui/material';
+import { selectUser } from '../features/userSlice';
+import { useSelector } from 'react-redux';
+import axiosInstance from './src/components/axiosInstance';
+import { makeStyles } from '@mui/styles';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 const useStyles = makeStyles((theme) => ({
   helperText: {
-    position: "relative",
-    left: "-8px", // Adjust this value to move the helper text
+    position: 'relative',
+    left: '-8px', // Adjust this value to move the helper text
   },
 }));
 const EditUser = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [error, setError] = useState('');
   const user = useSelector(selectUser);
   const navigate = useNavigate();
-  const [contact, setContact] = useState("");
-  const [contactError, setContactError] = useState("");
-  const [city, setCity] = useState("");
-  const [cityError, setCityError] = useState("");
+  const [contact, setContact] = useState('');
+  const [contactError, setContactError] = useState('');
+  const [city, setCity] = useState('');
+  const [cityError, setCityError] = useState('');
   const [dob, setDob] = useState(dayjs());
 
   const { id } = useParams();
@@ -45,21 +45,21 @@ const EditUser = () => {
 
   const onChangeName = (e) => {
     setName(e.target.value);
-    setNameError("");
+    setNameError('');
   };
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
-    setEmailError("");
+    setEmailError('');
   };
 
   const onChangeCity = (e) => {
     setCity(e.target.value);
-    setCityError("");
+    setCityError('');
   };
   const onChangeContact = (e) => {
     setContact(e.target.value);
-    setContactError("");
+    setContactError('');
   };
   const onChangeDob = (newValue) => {
     setDob(dayjs(newValue)); // Ensure newValue is converted to a dayjs object
@@ -81,11 +81,11 @@ const EditUser = () => {
         // setDob(result.dob);
         setDob(dayjs(result.dob)); // Convert the fetched dob to a dayjs object
       } else {
-        setError("Failed to fetch user data");
+        setError('Failed to fetch user data');
       }
     } catch (err) {
-      console.error("Failed to fetch user:", err);
-      setError("Failed to fetch user data");
+      console.error('Failed to fetch user:', err);
+      setError('Failed to fetch user data');
     }
   };
 
@@ -94,25 +94,25 @@ const EditUser = () => {
     let isError = false;
 
     if (!email) {
-      setEmailError("Please Enter Email Address");
+      setEmailError('Please Enter Email Address');
       isError = true;
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-      setEmailError("Please Enter Valid Email");
+      setEmailError('Please Enter Valid Email');
       isError = true;
     }
     if (!name) {
-      setNameError("Please Enter Name");
+      setNameError('Please Enter Name');
       isError = true;
     } else if (!/^[a-zA-Z]+$/.test(name)) {
-      setNameError("Please Enter Valid Name");
+      setNameError('Please Enter Valid Name');
       isError = true;
     }
     if (!city) {
-      setNameError("Please Enter city");
+      setNameError('Please Enter city');
       isError = true;
     }
     if (!contact) {
-      setNameError("Please Enter contact no");
+      setNameError('Please Enter contact no');
       isError = true;
     }
 
@@ -123,7 +123,7 @@ const EditUser = () => {
       const editUser1 = {
         name,
         email,
-        dob: dob.format("DD-MM-YYYY"),
+        dob: dob.format('DD-MM-YYYY'),
         city,
         contact,
       };
@@ -135,14 +135,14 @@ const EditUser = () => {
           },
         });
         if (response.status === 200) {
-          navigate("/users", { replace: true });
-          toast.success("Update Successful");
+          navigate('/users', { replace: true });
+          toast.success('Update Successful');
         } else {
-          toast.error("Failed to update user");
+          toast.error('Failed to update user');
         }
       } catch (err) {
-        console.error("Error submitting form:", err);
-        toast.error("Failed to update user");
+        console.error('Error submitting form:', err);
+        toast.error('Failed to update user');
       }
     }
   };
@@ -156,25 +156,25 @@ const EditUser = () => {
       container
       justifyContent="center"
       alignItems="center"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: '100vh' }}
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <div
           style={{
-            padding: "20px",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            padding: '20px',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           }}
         >
           <form onSubmit={handleUpdate}>
             <Grid container direction="column" alignItems="center">
-              <Avatar style={{ backgroundColor: "grey", margin: "20px" }}>
+              <Avatar style={{ backgroundColor: 'grey', margin: '20px' }}>
                 <PersonAddAltTwoToneIcon />
               </Avatar>
               <Typography
                 variant="h4"
-                style={{ color: "blue", marginBottom: "20px" }}
+                style={{ color: 'blue', marginBottom: '20px' }}
               >
                 Edit The Data
               </Typography>
@@ -244,17 +244,17 @@ const EditUser = () => {
                   FormHelperTextProps={{ className: classes.helperText }}
                 />
               </Grid>
-              <Grid item xs={12} sx={{ marginTop: "-10px" }}>
+              <Grid item xs={12} sx={{ marginTop: '-10px' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
+                  <DemoContainer components={['DatePicker']}>
                     <DatePicker
                       label="Date of Birth"
-                      sx={{ width: "100% " }}
+                      sx={{ width: '100% ' }}
                       value={dob}
                       onChange={onChangeDob}
-                      minDate={dayjs("01-01-1900")}
-                      maxDate={dayjs("01-01-2006")}
-                      views={["day", "month", "year"]}
+                      minDate={dayjs('01-01-1900')}
+                      maxDate={dayjs('01-01-2006')}
+                      views={['day', 'month', 'year']}
                       format="DD/MM/YYYY"
                       // slotProps={{ textField: { fullWidth: true } }}
                     />
@@ -272,7 +272,7 @@ const EditUser = () => {
                   color="primary"
                   variant="contained"
                   fullWidth
-                  style={{ marginTop: "10px", marginBottom: "15px" }}
+                  style={{ marginTop: '10px', marginBottom: '15px' }}
                 >
                   Submit
                 </Button>
